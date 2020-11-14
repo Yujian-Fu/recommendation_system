@@ -39,8 +39,12 @@ with open(FileName) as f:
             else:
                 user_dict_buy[user_id] = [product_id]
 
+    print("The total number of view record: ", len(user_dict_view))
+    sum = 0
     for key in user_dict_view:
-        print(key, user_dict_view[key])
+        if len(user_dict_view[key]) > 1:
+            sum += 1
+    print("The total number of useful record: ", sum)
 
 
             
