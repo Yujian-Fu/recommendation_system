@@ -21,8 +21,11 @@ with open(FileName) as f:
     print(reader[0])
     num_rows = len(reader)
     num_columns = len(reader[0])
+    print_each = num_rows / 10
     print("The total number of columns and rows ", num_rows, " ", num_columns)
     for i in range(1, num_rows):
+        if i % print_each == 0:
+            print("Finished ", (i/print_each), "of the whole")
         
         product_id = reader[i][2]
         user_id = reader[i][7]
