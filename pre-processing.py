@@ -10,7 +10,7 @@ start = time.time()
 action_list = ['view', 'cart', 'remove_from_cart', 'purchase']
 
 FileFolderPath = "./dataset/"
-FileName = FileFolderPath + "2019-Dec.csv"
+FileName = FileFolderPath + "2019-Nov.csv"
 user_dict_view = {}
 user_dict_buy = {}
 user_dict_add_chart = {}
