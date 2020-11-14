@@ -44,11 +44,21 @@ with open(FileName) as f:
     for key in user_dict_view:
         if len(user_dict_view[key]) > 1:
             sum += 1
-    print("The total number of useful record: ", sum)
+    print("The total number of useful view record: ", sum)
 
-
+    print("The total number of buy record: ", len(user_dict_buy))
+    sum = 0
+    for key in user_dict_view:
+        if len(user_dict_buy[key]) > 1:
+            sum += 1
+    print("The total number of useful buy record: ", sum)
             
-            
+    print("The total number of cart record: ", len(user_dict_add_chart))
+    sum = 0
+    for key in user_dict_view:
+        if len(user_dict_add_chart[key]) > 1:
+            sum += 1
+    print("The total number of useful buy record: ", sum)
 
 
 
