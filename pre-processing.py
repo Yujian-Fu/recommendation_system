@@ -26,7 +26,7 @@ with open(FileName) as f:
     print("The total number of columns and rows ", num_rows, " ", num_columns)
     for i in range(1, num_rows):
         if i % print_each == 0:
-            print("Finished ", (i/print_each), "of the whole")
+            print("Finished ", 10*(i/print_each), " percent of the whole")
         
         product_id = reader[i][2]
         user_id = reader[i][7]
