@@ -16,6 +16,7 @@ user_dict_buy = {}
 user_dict_add_chart = {}
 
 with open(FileName) as f:
+    print("Read file from: ", FileName)
     reader = list(csv.reader(f))
     print("The column name: ")
     print(reader[0])
