@@ -65,7 +65,7 @@ with open(FileName) as f:
 
 
 end = time.time()
-print (end - start)
+print ("Time for processing: ", round(end - start, 2))
 
 
 
