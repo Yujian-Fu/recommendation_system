@@ -2,6 +2,8 @@
 # 
 
 import csv 
+import datetime
+starttime = datetime.datetime.now()
 
 
 action_list = ['view', 'cart', 'remove_from_cart', 'purchase']
@@ -49,18 +51,19 @@ with open(FileName) as f:
     print("The total number of buy record: ", len(user_dict_buy))
     sum = 0
     for key in user_dict_view:
-        if len(user_dict_buy[key]) > 1:
+        if len(user_dict_view[key]) > 1:
             sum += 1
     print("The total number of useful buy record: ", sum)
             
     print("The total number of cart record: ", len(user_dict_add_chart))
     sum = 0
-    for key in user_dict_view:
+    for key in user_dict_add_chart:
         if len(user_dict_add_chart[key]) > 1:
             sum += 1
     print("The total number of useful buy record: ", sum)
 
-
+endtime = datetime.datetime.now()
+print (endtime - starttime).seconds
 
 
 
