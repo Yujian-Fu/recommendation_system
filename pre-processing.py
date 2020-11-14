@@ -29,12 +29,12 @@ with open(FileName) as f:
             else:
                 user_dict_view[user_id] = [product_id]
         elif reader[i][1] == "cart":
-            if user_id in user_dict_view:
+            if user_id in user_dict_add_chart:
                 user_dict_add_chart[user_id].append(product_id)
             else:
                 user_dict_add_chart[user_id] = [product_id]
         elif reader[i][1] == "purchase":
-            if user_id in user_dict_view:
+            if user_id in user_dict_buy:
                 user_dict_buy[user_id].append(product_id)
             else:
                 user_dict_buy[user_id] = [product_id]
