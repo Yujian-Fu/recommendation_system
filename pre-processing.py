@@ -2,8 +2,9 @@
 # 
 
 import csv 
-import datetime
-starttime = datetime.datetime.now()
+import time
+
+start = time.time()
 
 
 action_list = ['view', 'cart', 'remove_from_cart', 'purchase']
@@ -62,8 +63,9 @@ with open(FileName) as f:
             sum += 1
     print("The total number of useful buy record: ", sum)
 
-endtime = datetime.datetime.now()
-print (endtime - starttime).seconds
+
+end = time.time()
+print (end - start)
 
 
 
