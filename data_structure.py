@@ -25,6 +25,7 @@ class record:
 
         for idx, each_record in enumerate(recorder):
 
+            print(idx)
             if idx > 0:
                 if recorder[idx] == recorder[idx - 1]:
                     continue
