@@ -57,7 +57,6 @@ class record:
         each_customer_list = [len(self.customer_dict[user].product_dict) for user in self.customer_dict ]
         print("The total num of customer is: ", len(self.customer_dict), " The total number of product is: ", len(self.product_dict), " Each customer has record on ", 
              round(sum(each_customer_list) / len(each_customer_list), 2), "products on average")
-        exit(0)
 
 
     def get_product_pair(self, cus_id):
