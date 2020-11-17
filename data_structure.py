@@ -20,6 +20,8 @@ class record:
         self.max_time = ""
         self.product_similarity_dict = {}
         self.customer_similarity_dict = {}
+        self.similarity_type = -1
+        self.use_parallel = 1 if USE_PARALLEL else 0
 
 
     def add_record(self, recorder):
@@ -68,12 +70,12 @@ class record:
         CustomerPriceDict = {}
         for index1 in range(len(CustomerKeyList)):
             ProductKey1 = CustomerKeyList[index1]
-            CustomerPriceDict[ProductKey1] = CustomerProductDict[ProductKey1][1]
+            CustomerPriceDict[ProductKey1] = self.customer_dict[cus_id].price_dict[ProductKey1]
 
             for index2 in range(index1+1, len(CustomerKeyList)):
                 ProductKey2 = CustomerKeyList[index2]
-                Weight1 = CustomerProductDict[ProductKey1][0]
-                Weight2 = CustomerProductDict[ProductKey2][0]
+                Weight1 = CustomerProductDict[ProductKey1]
+                Weight2 = CustomerProductDict[ProductKey2]
                 CustomerPairList.append([ProductKey1, ProductKey2, Weight1 * Weight2])
 
         return [CustomerPairList, CustomerPriceDict]
@@ -105,35 +107,134 @@ class record:
             for ProductPair in ProducPairList:
                 assert(len(ProductPair) == 3)
                 self.product_dict[ProductPair[0]].add_product_pair(ProductPair[1], ProductPair[2])
-        
+                self.product_dict[ProductPair[1]].add_product_pair(ProductPair[0], ProductPair[2])
+
         #print('\r Building the similarity matrix:  ',idx," / ", len(self.customer_dict), " remaining time: ", round((time.time() - StartTime) * (len(self.customer_dict) - idx) / idx, 2), " s", end='')
         print("Build the similarity matrix with time usage: ", round(time.time() - StartTime, 2), " s")
 
 
-    def Cosine_similarity(self, dict_1, dict_2):
+    def Cosine_similarity(self, dict_1, dict_2, n = 0):
+        if len(dict_1) == 0 or len(dict_2) == 0:
+            return 0
 
-        return 0
+        ProdSum = 0
+        Norm1 = 0
+        Norm2 = 0
+        [dict_1, dict_2] =  [dict_1, dict_2] if len(dict_1) < len(dict_2) else [dict_2, dict_1]
+        for key1 in dict_1:
+            if key1 in dict_2:
+                ProdSum += dict_1[key1] * dict_2[key1]
+        
+        if ProdSum == 0:
+            return 0
+        
+        for key1 in dict_1:
+            Norm1 += dict_1[key1] ** 2
 
-    def Jaccard_similarity(self, dict_1, dict_2):
-        return 0
+        for key2 in dict_2:
+            Norm2 += dict_2[key2] ** 2
 
-    def Pearson_similarity(self, dict_1, dict_2):
-        return 0
+        return ProdSum / ((Norm1 * Norm2) ** 0.5)
 
-    def compute_item_similarity(self):
-        return 0
+    def Jaccard_similarity(self, dict_1, dict_2, n = 0):
+        if len(dict_1) == 0 or len(dict_2) == 0:
+            return 0
+
+        UnionLength = 0
+        [dict_1, dict_2] =  [dict_1, dict_2] if len(dict_1) < len(dict_2) else [dict_2, dict_1]
+        
+        for key1 in dict_1:
+            if key1 in dict_2:
+                UnionLength += 1
+
+        return UnionLength / (len(dict_1) * len(dict_2))
+
+
+    # n is the number of dimension
+    def Pearson_similarity(self, dict_1, dict_2, n):
+        if len(dict_1) == 0 or len(dict_2) == 0:
+            return 0
+
+        Norm1 = 0
+        Sum1 = 0
+        Norm2 = 0
+        Sum2 = 0
+        Prod = 0
+
+        [dict_1, dict_2] =  [dict_1, dict_2] if len(dict_1) < len(dict_2) else [dict_2, dict_1]
+
+        for key1 in dict_1:
+            if key1 in dict_2:
+                Prod += dict_1[key1] * dict_2[key1]
+        
+        for key1 in dict_1:
+            Norm1 += dict_1[key1] ** 2
+            Sum1 += dict_1[key1]
+        
+        for key2 in dict_2:
+            Norm2 += dict_2[key2] ** 2
+            Sum2 += dict_2[key2]
+        
+        return (n * Prod - Sum1 * Sum2) / ((n * Norm1 - Sum1 **2) * (n * Norm2 - Sum2 **2)) ** 0.5
+
+
+    def compute_similarity(self):
+        if SIMILARITY_TYPE == "Cosine":
+            SimilarityFunction = self.Cosine_similarity
+        elif SIMILARITY_TYPE == "Jaccard":
+            SimilarityFunction == self.Jaccard_similarity
+        elif SIMILARITY_TYPE == "Pearson":
+            SimilarityFunction = self.Pearson_similarity
+        else:
+            RaiseTypeError(SIMILARITY_TYPE)
+        
+        self.compute_item_similarity(SimilarityFunction)
+        self.compute_customer_similarity(SimilarityFunction)
+
+
+    def compute_item_similarity(self, SimilarityFunction):
+        assert(len(self.product_similarity_dict) == 0)
+
+        for key1 in self.product_dict:
+            NeighborDict = self.product_dict[key1]
+
+            if key1 not in self.product_similarity_dict:
+                self.product_similarity_dict[key1] = {}
+
+            for key2 in NeighborDict:
+
+                if key2 not in self.product_similarity_dict:
+                    self.product_similarity_dict[key2] = {}
+                
+                if key2 not in self.product_similarity_dict[key1]:
+                    Similarity = SimilarityFunction(self.product_dict[key1], self.product_dict[key2], len(self.product_dict))
+                    self.product_similarity_dict[key1][key2] = Similarity
+                    self.product_similarity_dict[key2][key1] = Similarity
+
     
-    def compute_customer_similarity(self):
+    def compute_customer_similarity(self, SimilarityFunction):
+        assert(len(self.customer_similarity_dict) == 0)
 
-        return 0
+        CustomerKeyList = list(self.customer_dict.keys())
 
+        for key1 in range(len(CustomerKeyList)):
+            if key1 not in self.customer_similarity_dict:
+                self.customer_similarity_dict[key1] = {}
+
+            for key2 in range(key1+1, len(CustomerKeyList)):
+                if key2 not in self.customer_similarity_dict:
+                    self.customer_similarity_dict[key2] = {}
+                assert(key1 not in self.customer_similarity_dict[key2])
+                Similarity = SimilarityFunction(self.customer_dict[key1].product_dict, self.customer_dict[key2].product_dict, len(self.product_dict))
+                self.customer_similarity_dict[key1][key2] = Similarity
+                self.customer_similarity_dict[key2][key1] = Similarity
 
 
     def visualize(self):
         count = 0
-        topK = 0
         for product in self.product_dict:
             count += 1
+            topK = 0
             self.product_dict[product].sort_value()
             print("The similar product for product ", self.product_dict[product].id, self.product_dict[product].brand, self.product_dict[product].category)
             for relation_product in self.product_dict[product].relation_dict:
@@ -190,6 +291,7 @@ class customer:
         self.record_num = 0
         self.id = customer_id
         self.product_dict = OrderedDict()
+        self.price_dict = OrderedDict()
 
     def add_record(self, action_time, action_type, product_id, price):
         self.record_num += 1
@@ -198,7 +300,9 @@ class customer:
         else:
             self.product_dict[product_id] = [[action_time, action_type, price]]
 
+
     def check_interest(self):
+        assert(len(self.price_dict) == 0)
         DeleteKeyList = []
         for product in self.product_dict:
             product_interest = 0
@@ -236,8 +340,9 @@ class customer:
                 
                 if product_interest > MAX_W:
                     product_interest = MAX_W
-            
-                self.product_dict[product] = [product_interest, product_interest_price]
+
+                self.product_dict[product] = product_interest
+                self.price_dict[product] = product_interest_price
 
         for DeleteKey in DeleteKeyList:
             del self.product_dict[DeleteKey]

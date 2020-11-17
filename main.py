@@ -22,6 +22,7 @@ if __name__ == "__main__":
 
             Record.build_similarity_matrix()
             Record.visualize()
+            Record.compute_similarity()
     end = time.time()
     print("The whole process consumes: ", round(end - start, 2), " s")
 
