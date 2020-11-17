@@ -19,7 +19,7 @@ class record:
     def add_record(self, recorder):
         StartTime = time.time()
 
-        for idx, each_record in enumerate(recorder):
+        for idx, each_record in enumerate(recorder, 1):
             
             [action_time, action_type, product_id, category_id, category_code, brand, price, customer_id] = each_record[0:-1]
 
@@ -41,7 +41,7 @@ class record:
 
     def build_similarity_matrix(self):
         StartTime = time.time()
-        for idx, cus_id in enumerate(self.customer_dict):
+        for idx, cus_id in enumerate(self.customer_dict, 1):
 
             record_dict = self.customer_dict[cus_id].record_dict
 
