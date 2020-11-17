@@ -19,7 +19,7 @@ if __name__ == "__main__":
             ShowProcess = len(reader) / 10
 
             for i in range(1, len(reader)):
-                print(i, end= " ")
+                print('\r',i," / ", len(reader), end='')
                 if i % ShowProcess == 0:
                     print("Finish processing ", 10*(i/ShowProcess), " percent of the whole file")
                 
@@ -29,7 +29,6 @@ if __name__ == "__main__":
             Record.visualize()
     end = time.time()
 
-                
 
 
 
