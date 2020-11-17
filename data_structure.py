@@ -54,7 +54,7 @@ class record:
             self.customer_dict[cus_id].check_interest()
         
         print("Load the dataset with time usage: ", round(time.time() - StartTime, 2), " s")
-        each_customer_list = [len(self.customer_dict[user].record_dict) for user in self.customer_dict ]
+        each_customer_list = [len(self.customer_dict[user].product_dict) for user in self.customer_dict ]
         print("The total num of customer is: ", len(self.customer_dict), " The total number of product is: ", len(self.product_dict), " Each customer has record on ", 
              round(sum(each_customer_list) / len(each_customer_list), 2), "products on average")
         exit(0)
