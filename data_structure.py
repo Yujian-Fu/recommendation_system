@@ -23,8 +23,13 @@ class record:
 
     def add_record(self, recorder):
         StartTime = time.time()
+        PreviousSession = ""
 
         for idx, each_record in enumerate(recorder, 1):
+            RecordSession = each_record[-1]
+            if RecordSession == PreviousSession:
+                continue
+            PreviousSession = RecordSession
             
             [action_time, action_type, product_id, category_id, category_code, brand, price, customer_id] = each_record[0:-1]
             product_id = int(product_id)
