@@ -75,7 +75,7 @@ class record:
                 Weight2 = CustomerProductDict[ProductKey2][0]
                 CustomerPairList.append([ProductKey1, ProductKey2, Weight1 * Weight2])
 
-        return CustomerPairList, CustomerPriceDict
+        return [CustomerPairList, CustomerPriceDict]
         
 
     def build_similarity_matrix(self):
@@ -86,7 +86,7 @@ class record:
 
         with concurrent.futures.ProcessPoolExecutor() as executer:
             cus_list = list(self.customer_dict.keys())
-            for cus_id, CustomerPairList, CustomerPriceDict in zip(cus_list, executer.map(self.get_product_pair, cus_list)):
+            for cus_id, [CustomerPairList, CustomerPriceDict] in zip(cus_list, executer.map(self.get_product_pair, cus_list)):
                 ProductPairDict[cus_id], ProductPriceDict[cus_id] = CustomerPairList, CustomerPriceDict
 
         #for idx, cus_id in enumerate(self.customer_dict, 1):
