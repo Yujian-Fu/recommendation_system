@@ -18,9 +18,10 @@ class record:
         self.category_dict = category_dict()
         self.min_time = ""
         self.max_time = ""
-        self.product_similarity = {}
-        self.customer_similarity = {}
-    
+        self.product_similarity_dict = {}
+        self.customer_similarity_dict = {}
+
+
     def add_record(self, recorder):
         StartTime = time.time()
 
@@ -76,7 +77,7 @@ class record:
                 CustomerPairList.append([ProductKey1, ProductKey2, Weight1 * Weight2])
 
         return [CustomerPairList, CustomerPriceDict]
-        
+
 
     def build_similarity_matrix(self):
         StartTime = time.time()
@@ -84,15 +85,16 @@ class record:
         ProductPairDict = {}
         ProductPriceDict = {}
 
+
         with concurrent.futures.ProcessPoolExecutor() as executer:
             cus_list = list(self.customer_dict.keys())
             for cus_id, [CustomerPairList, CustomerPriceDict] in zip(cus_list, executer.map(self.get_product_pair, cus_list)):
                 ProductPairDict[cus_id], ProductPriceDict[cus_id] = CustomerPairList, CustomerPriceDict
 
-        #for idx, cus_id in enumerate(self.customer_dict, 1):
-            #print("\rBuilding Product Pairs: ", idx, " / ", len(self.customer_dict), end='')
-            #ProductPairDict[cus_id], ProductPriceDict[cus_id] = self.get_product_pair(cus_id)
-        #print()
+        for idx, cus_id in enumerate(self.customer_dict, 1):
+            print("\rBuilding Product Pairs: ", idx, " / ", len(self.customer_dict), end='')
+            ProductPairDict[cus_id], ProductPriceDict[cus_id] = self.get_product_pair(cus_id)
+        print()
 
         for UserID in ProductPriceDict:
             for ProductID in ProductPriceDict[UserID]:
@@ -108,8 +110,23 @@ class record:
         print("Build the similarity matrix with time usage: ", round(time.time() - StartTime, 2), " s")
 
 
-    def compute_similarity(self):
+    def Cosine_similarity(self, dict_1, dict_2):
+
         return 0
+
+    def Jaccard_similarity(self, dict_1, dict_2):
+        return 0
+
+    def Pearson_similarity(self, dict_1, dict_2):
+        return 0
+
+    def compute_item_similarity(self):
+        return 0
+    
+    def compute_customer_similarity(self):
+
+        return 0
+
 
 
     def visualize(self):
