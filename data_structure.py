@@ -4,6 +4,11 @@ import time
 from config import *
 
 
+def RaiseTypeError(S):
+    print("Error: action type not defined:", S)
+    exit(-1)
+
+
 class record:
     def __init__(self):
         self.record_num = 0
@@ -34,16 +39,32 @@ class record:
             self.customer_dict[customer_id].add_record(action_time, action_type, product_id, price)
             
             print('\rLoading the records:  ',idx," / ", len(recorder), " remaining time: ", round((time.time() - StartTime) * (len(recorder) - idx) / idx, 2), " s", end='')
-            
+        
+        for cus_id in self.customer_dict:
+            self.customer_dict[cus_id].check_interest()
+        
+        print("Load the dataset with time usage: ", round(time.time() - StartTime, 2), " s")
         each_customer_list = [len(self.customer_dict[user].record_dict) for user in self.customer_dict ]
         print("\nThe total num of customer is: ", len(self.customer_dict), " The total number of product is: ", len(self.product_dict), " Each customer has record on ", 
              round(sum(each_customer_list) / len(each_customer_list), 2), "products on average")
-        print("  Load the dataset with time usage: ", round(time.time() - StartTime, 2), " s")
         exit(0)
 
 
     def get_product_pair(self, cus_id):
-        return 0
+        CustomerKeyList = self.customer_dict[cus_id].produc keys()
+        CustomerPairList = []
+        CustomerActionList = []
+        CustomerPriceList = []
+        for product1 in range(len(CustomerKeyList)):
+            EachItemList = []
+            CustomerActionList.append(self.customer_dict[])
+            for product2 in range(i+1, len(CustomerKeyList)):
+
+
+
+
+
+        
 
     def build_similarity_matrix(self):
         StartTime = time.time()
@@ -130,31 +151,62 @@ class product:
         self.relation_dict = OrderedDict(sorted(self.relation_dict.items(), key = lambda t:t[1]))
 
     def add_record_num(self, action_type):
-        if action_type == "view":
+        if action_type == VIEW_S:
             self.view_num += 1
-        elif action_type == "cart":
+        elif action_type == ADD_S:
             self.add_num += 1
-        elif action_type == "purchase":
+        elif action_type == PURCHASE_S:
             self.purchase_num += 1
-        elif action_type == "remove_from_cart":
+        elif action_type == REMOVE_S:
             self.remove_num += 1
         else:
-            print("Error: action type not defined:", action_type)
-            exit(0)
+            RaiseTypeError(action_type)
 
 
 class customer:
     def __init__(self, customer_id):
         self.record_num = 0
         self.id = customer_id
-        self.record_dict = OrderedDict()
+        self.product_dict = OrderedDict()
 
     def add_record(self, action_time, action_type, product_id, price):
         self.record_num += 1
         if product_id in self.record_dict:
-            self.record_dict[product_id].append([action_time, action_type, price])
+            self.product_dict[product_id].append([action_time, action_type, price])
         else:
-            self.record_dict[product_id] = [[action_time, action_type, price]]
+            self.product_dict[product_id] = [[action_time, action_type, price]]
+
+    def check_interest(self):
+        for product in self.product_dict:
+            product_interest = 0
+            product_interest_price = 0
+            each_record_interest = 0
+
+            for product_record in self.product_dict[product]:
+                
+                if product_record[1] == VIEW_S:
+                    each_record_interest = VIEW_W
+
+                elif product_record[1] == ADD_S:
+                    each_record_interest = ADD_W
+
+                elif product_record[1] == PURCHASE_S:
+                    each_record_interest = PURCHASE_W
+                
+                elif product_record[1] == REMOVE_S:
+                    each_record_interest = REMOVE_W
+                
+                else:
+                    RaiseTypeError(product_record[1])
+                
+                product_interest += each_record_interest
+                product_interest_price += each_record_interest * product_record[2]
+
+            product_interest_price /= product_interest
+            if product_interest > MAX_W:
+                product_interest = MAX_W
+            
+            product_dict[product] = [product_interest, product_interest_price]
 
 
     def get_weight(self, action_type_1, action_type_2):
