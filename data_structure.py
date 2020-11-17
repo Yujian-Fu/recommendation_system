@@ -176,11 +176,12 @@ class customer:
             self.product_dict[product_id] = [[action_time, action_type, price]]
 
     def check_interest(self):
+        DeleteKeyList = []
         for product in self.product_dict:
             product_interest = 0
             product_interest_price = 0
             each_record_interest = 0
-            DeleteKeyList = []
+            
 
             for product_record in self.product_dict[product]:
                 assert(len(product_record) == 3)
