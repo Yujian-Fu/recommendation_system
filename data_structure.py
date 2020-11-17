@@ -43,6 +43,8 @@ class record:
         StartTime = time.time()
         for idx, cus_id in enumerate(self.customer_dict, 1):
 
+
+
             record_dict = self.customer_dict[cus_id].record_dict
 
             for time_stamp_1 in record_dict:
@@ -83,7 +85,7 @@ class record:
             print("The similar product for product ", self.product_dict[product].id, self.product_dict[product].brand, self.product_dict[product].category)
             for relation_product in self.product_dict[product].relation_dict:
                 
-                print(relation_product, self.product_dict[relation_product].id, self.product_dict[relation_product].brand, self.product_dict[relation_product].category, end="")
+                print(relation_product, self.product_dict[relation_product].id, self.product_dict[relation_product].brand, self.product_dict[relation_product].category)
                 topK += 1
                 if topK > VIS_K:
                     break
