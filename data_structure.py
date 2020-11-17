@@ -66,9 +66,7 @@ class record:
         CustomerPriceDict = {}
         for index1 in range(len(CustomerKeyList)):
             ProductKey1 = CustomerKeyList[index1]
-
-            price = CustomerProductDict[ProductKey1][1]
-            CustomerPriceDict[ProductKey1] = price
+            CustomerPriceDict[ProductKey1] = CustomerProductDict[ProductKey1][1]
 
             for index2 in range(index1+1, len(CustomerKeyList)):
                 ProductKey2 = CustomerKeyList[index2]
