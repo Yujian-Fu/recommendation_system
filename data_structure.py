@@ -198,11 +198,15 @@ class customer:
                 product_interest_price += each_record_interest * product_record[2]
 
 
-        product_interest_price /= product_interest
-        if product_interest > MAX_W:
-            product_interest = MAX_W
+            if product_interest == 0:
+                for product_record in self.product_dict[product]:
+                    print(product_record)
+            product_interest_price /= product_interest
+            
+            if product_interest > MAX_W:
+                product_interest = MAX_W
         
-        self.product_dict[product] = [product_interest, product_interest_price]
+            self.product_dict[product] = [product_interest, product_interest_price]
 
 
 
