@@ -113,7 +113,6 @@ for key in user_dict_add_chart:
             final_product_dict[product_id] = each_user_record[product_id]
 
 
-
 final_product_count_dict = {}
 for key in final_product_dict:
     final_product_count_dict[key] = Counter(final_product_dict[key])

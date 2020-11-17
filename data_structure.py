@@ -15,40 +15,52 @@ class record:
         self.product_similarity = {}
         self.customer_similarity = {}
     
-    def add_record(self, time, action_type, product_id, category_id, category_code, brand, price, customer_id):
-        self.category_dict.add_category(category_id, category_code)
 
-        if product_id not in self.product_dict:
-            self.product_dict[product_id] = product(product_id, category_id, brand)
+    def add_record(self, recorder):
+        for each_record in recorder:
+            [time, action_type, product_id, category_id, category_code, brand, price, customer_id] = each_record[0:-1]
 
-        if customer_id in self.customer_dict:
-            self.customer_dict[customer_id].add_record(time, action_type, product_id, price)
-        else:
-            self.customer_dict[customer_id] = customer(customer_id)
-            self.customer_dict[customer_id].add_record(time, action_type, product_id, price)
+            self.category_dict.add_category(category_id, category_code)
+
+            if product_id not in self.product_dict:
+                self.product_dict[product_id] = product(product_id, category_id, brand)
+
+            if customer_id in self.customer_dict:
+                self.customer_dict[customer_id].add_record(time, action_type, product_id, price)
+            else:
+                self.customer_dict[customer_id] = customer(customer_id)
+                self.customer_dict[customer_id].add_record(time, action_type, product_id, price)
 
 
     def build_similarity_matrix(self):
-        for cus_id in self.customer_dict:
 
-            for time_stamp_1 in self.customer_dict[cus_id].record_dict:
-                product_id_1 = self.customer_dict[cus_id].record_dict[time_stamp_1][1]
-                action_type_1 = self.customer_dict[cus_id].record_dict[time_stamp_1][0]
-                price = self.customer_dict[cus_id].record_dict[time_stamp_1][2]
+        for idx, cus_id in enumerate(self.customer_dict):
+            print('\r Building the similarity matrix:  ',idx," / ", len(self.customer_dict), end='')
+
+            record_dict = self.customer_dict[cus_id].record_dict
+
+            for time_stamp_1 in record_dict:
+
+                product_id_1 = record_dict[time_stamp_1][1]
+                action_type_1 = record_dict[time_stamp_1][0]
+                price = record_dict[time_stamp_1][2]
                 assert(product_id_1 in self.product_dict)
 
                 if price not in self.product_dict[product_id_1].price:
                     self.product_dict[product_id_1].price[price] = 1
                 else:
                     self.product_dict[product_id_1].price[price] += 1
+
                 self.product_dict[product_id_1].add_record_num(action_type_1)
 
-                for time_stamp_2 in self.customer_dict[cus_id].record_dict:
-                    product_id_2 = self.customer_dict[cus_id].record_dict[time_stamp_2][1]
+                for time_stamp_2 in record_dict:
+                    product_id_2 = record_dict[time_stamp_2][1]
+
                     if product_id_1 is not product_id_2:
-                        action_type_2 = self.customer_dict[cus_id].record_dict[time_stamp_2][0]
+                        action_type_2 = record_dict[time_stamp_2][0]
                         pair_weight = self.customer_dict[cus_id].get_weight(action_type_1, action_type_2)
                         self.product_dict[product_id_1].add_product_pair(product_id_2, pair_weight)
+
 
     def compute_similarity(self):
         return 0
@@ -88,11 +100,11 @@ class product:
         # other_product_id: value
         self.relation_dict = OrderedDict()
 
-    def add_product_pair(self, target_id, value):
+    def add_product_pair(self, target_id, weight_value):
         if target_id in self.relation_dict:
-            self.relation_dict[target_id] += value
+            self.relation_dict[target_id] += weight_value
         else:
-            self.relation_dict[target_id] = value
+            self.relation_dict[target_id] = weight_value
     
     def sort_value(self):
         self.relation_dict = OrderedDict(sorted(self.relation_dict.items(), key = lambda t:t[1]))
