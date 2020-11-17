@@ -19,7 +19,7 @@ class record:
     def add_record(self, recorder):
         StartTime = time.time()
 
-        for idx, each_record in enumerate(recorder, 1):
+        for idx, each_record in enumerate(recorder, 2):
             
             [action_time, action_type, product_id, category_id, category_code, brand, price, customer_id] = each_record[0:-1]
 
