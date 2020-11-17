@@ -19,9 +19,10 @@ class record:
     def add_record(self, recorder):
         StartTime = time.time()
 
-        for idx, each_record in enumerate(recorder):
+        for idx, each_record in enumerate(recorder, start = 1):
 
-            print('\r Loading the records:  ',idx," / ", len(recorder), end='')
+
+            print('\r Loading the records:  ',idx," / ", len(recorder), " remaining time: ", (time.time() - StartTime) * (len(recorder) - idx) / idx, " s", end='')
 
             [action_time, action_type, product_id, category_id, category_code, brand, price, customer_id] = each_record[0:-1]
 
@@ -40,7 +41,7 @@ class record:
     def build_similarity_matrix(self):
         StartTime = time.time()
         for idx, cus_id in enumerate(self.customer_dict):
-            print('\r Building the similarity matrix:  ',idx," / ", len(self.customer_dict), end='')
+            print('\r Building the similarity matrix:  ',idx," / ", len(self.customer_dict), " remaining time: ", (time.time() - StartTime) * (len(self.customer_dict) - idx) / idx, " s", end='')
 
             record_dict = self.customer_dict[cus_id].record_dict
 
