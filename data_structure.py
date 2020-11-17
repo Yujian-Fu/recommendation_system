@@ -60,7 +60,7 @@ class record:
 
 
     def get_product_pair(self, cus_id):
-        CustomerProductDict = self.customer_dict[cus_id].product_dict
+        CustomerProductDict = list(self.customer_dict[cus_id].product_dict)
         CustomerKeyList = CustomerProductDict.keys()
         CustomerPairList = []
         CustomerPriceDict = []
