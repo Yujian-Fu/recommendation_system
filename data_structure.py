@@ -25,7 +25,6 @@ class record:
 
         for idx, each_record in enumerate(recorder):
 
-            print(idx)
             if idx > 0:
                 if recorder[idx] == recorder[idx - 1]:
                     continue
@@ -48,7 +47,7 @@ class record:
 
             self.customer_dict[customer_id].add_record(action_time, action_type, product_id, price)
             
-            print('\rLoading the records:  ',idx+1," / ", len(recorder), " remaining time: ", round((time.time() - StartTime) * (len(recorder) - idx+1) / idx+1, 2), " s", end='')
+            print('\rLoading the records:  ',idx+1," / ", len(recorder), " remaining time: ", round((time.time() - StartTime) * (len(recorder) - idx+1) / (idx+1), 2), " s", end='')
         
         for cus_id in self.customer_dict:
             self.customer_dict[cus_id].check_interest()
