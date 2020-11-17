@@ -116,7 +116,8 @@ for key in user_dict_add_chart:
 final_product_count_dict = {}
 for key in final_product_dict:
     print(key)
-    final_product_count_dict[key] = Counter(final_product_dict[key])
+    a = Counter(final_product_dict[key])
+    final_product_count_dict[key] = a
 
 end = time.time()
 
