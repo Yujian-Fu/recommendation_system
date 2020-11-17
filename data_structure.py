@@ -91,11 +91,11 @@ class product:
     def add_record_num(self, action_type):
         if action_type == "view":
             self.view_num += 1
-        elif action_type == "add to chart":
+        elif action_type == "cart":
             self.add_num += 1
         elif action_type == "purchase":
             self.purchase_num += 1
-        elif action_type == "remove from chart":
+        elif action_type == "remove_from_cart":
             self.remove_num += 1
         else:
             print("Error: action type not defined:", action_type)
