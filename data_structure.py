@@ -34,10 +34,11 @@ class record:
                 action_type_1 = self.customer_dict[cus_id].record_dict[time_stamp_1][0]
                 price = self.customer_dict[cus_id].record_dict[time_stamp_1][2]
                 assert(product_id_1 in self.product_dict)
-                if price not in self.customer_dict[cus_id].price:
-                    self.customer_dict[cus_id].price[price] = 1
+
+                if price not in self.product_dict[product_id_1].price:
+                    self.product_dict[product_id_1].price[price] = 1
                 else:
-                    self.customer_dict[cus_id].price[price] += 1
+                    self.product_dict[product_id_1].price[price] += 1
                 self.product_dict[product_id_1].add_record_num(action_type_1)
 
                 for time_stamp_2 in self.customer_dict[cus_id].record_dict:
