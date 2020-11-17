@@ -204,8 +204,6 @@ class customer:
 
 
             if product_interest <= 0:
-                for product_record in self.product_dict[product]:
-                    print(product_record)
                 DeleteKeyList.append(product)
                 
             else:                    
@@ -215,7 +213,7 @@ class customer:
                     product_interest = MAX_W
             
                 self.product_dict[product] = [product_interest, product_interest_price]
-        
+
         for DeleteKey in DeleteKeyList:
             del self.product_dict[DeleteKey]
 
