@@ -84,7 +84,7 @@ class record:
         ProductPairDict = {}
         ProductPriceDict = {}
 
-        with concurrent.futures.ProcessPoolExecutor() as Executer:
+        with concurrent.futures.ProcessPoolExecutor() as executer:
             for cus_id, CustomerPairList, CustomerPriceDict in zip(list(self.customer_dict.keys()), executer.map(self.get_product_pair(cus_id))):
                 ProductPairDict[cus_id], ProductPriceDict[cus_id] = CustomerPairList, CustomerPriceDict
     
