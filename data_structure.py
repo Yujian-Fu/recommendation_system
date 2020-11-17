@@ -33,6 +33,8 @@ class record:
             else:
                 self.customer_dict[customer_id] = customer(customer_id)
                 self.customer_dict[customer_id].add_record(action_time, action_type, product_id, price)
+            
+            
             print('\r Loading the records:  ',idx," / ", len(recorder), " remaining time: ", round((time.time() - StartTime) * (len(recorder) - idx) / idx, 2), " s", end='')
 
         print("  Load the dataset with time usage: ", round(time.time() - StartTime, 2), " s")
