@@ -12,6 +12,8 @@ class record:
         self.category_dict = category_dict()
         self.min_time = ""
         self.max_time = ""
+        self.product_similarity = {}
+        self.customer_similarity = {}
     
     def add_record(self, time, action_type, product_id, category_id, category_code, brand, price, customer_id):
         self.category_dict.add_category(category_id, category_code)
@@ -48,11 +50,15 @@ class record:
                         pair_weight = self.customer_dict[cus_id].get_weight(action_type_1, action_type_2)
                         self.product_dict[product_id_1].add_product_pair(product_id_2, pair_weight)
 
+    def compute_similarity(self):
+        return 0
+
+
     def visualize(self):
         count = 0
         topK = 0
         for product in self.product_dict:
-            coun += 1
+            count += 1
             self.product_dict[product].sort_value()
             print("The similar product for product ", self.product_dict[product].id, self.product_dict[product].brand, self.product_dict[product].category)
             for relation_product in self.product_dict[product].relation_dict:
@@ -63,6 +69,9 @@ class record:
                     break
             if count > VIS_NUM:
                 break
+
+    def prediction_item_based(self):
+        return 0
 
 
 class product:

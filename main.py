@@ -4,6 +4,8 @@ import csv
 from data_structure import *
 import time
 
+
+
 start = time.time()
 if __name__ == "__main__":
 
@@ -25,7 +27,7 @@ if __name__ == "__main__":
             Record.build_similarity_matrix()
             Record.visualize()
     end = time.time()
-    
+
                 
 
 
