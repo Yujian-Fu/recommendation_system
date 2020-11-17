@@ -63,11 +63,10 @@ class record:
         CustomerProductDict = self.customer_dict[cus_id].product_dict
         CustomerKeyList = list(CustomerProductDict.keys())
         CustomerPairList = []
-        CustomerPriceDict = []
+        CustomerPriceDict = {}
         for index1 in range(len(CustomerKeyList)):
             ProductKey1 = CustomerKeyList[index1]
 
-            print(cus_id, ProductKey1, CustomerProductDict[ProductKey1], len(CustomerProductDict[ProductKey1]), type(CustomerProductDict[ProductKey1]))
             price = CustomerProductDict[ProductKey1][1]
             CustomerPriceDict[ProductKey1] = price
 
