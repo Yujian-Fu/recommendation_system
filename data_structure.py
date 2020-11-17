@@ -60,8 +60,8 @@ class record:
 
 
     def get_product_pair(self, cus_id):
-        CustomerProductDict = list(self.customer_dict[cus_id].product_dict)
-        CustomerKeyList = CustomerProductDict.keys()
+        CustomerProductDict = self.customer_dict[cus_id].product_dict
+        CustomerKeyList = list(CustomerProductDict.keys())
         CustomerPairList = []
         CustomerPriceDict = []
         for index1 in range(len(CustomerKeyList)):
