@@ -23,7 +23,7 @@ class record:
 
             print('\r Loading the records:  ',idx," / ", len(recorder), end='')
 
-            [time, action_type, product_id, category_id, category_code, brand, price, customer_id] = each_record[0:-1]
+            [action_time, action_type, product_id, category_id, category_code, brand, price, customer_id] = each_record[0:-1]
 
             self.category_dict.add_category(category_id, category_code)
 
@@ -31,10 +31,10 @@ class record:
                 self.product_dict[product_id] = product(product_id, category_id, brand)
 
             if customer_id in self.customer_dict:
-                self.customer_dict[customer_id].add_record(time, action_type, product_id, price)
+                self.customer_dict[customer_id].add_record(action_time, action_type, product_id, price)
             else:
                 self.customer_dict[customer_id] = customer(customer_id)
-                self.customer_dict[customer_id].add_record(time, action_type, product_id, price)
+                self.customer_dict[customer_id].add_record(action_time, action_type, product_id, price)
         print("  Load the dataset with time usage: ", round(time.time() - StartTime, 2), " s")
 
     def build_similarity_matrix(self):
@@ -135,9 +135,9 @@ class customer:
         self.id = customer_id
         self.record_dict = OrderedDict()
 
-    def add_record(self, time, action_type, product_id, price):
+    def add_record(self, action_time, action_type, product_id, price):
         self.record_num += 1
-        self.record_dict[time] = [action_type, product_id, price]
+        self.record_dict[action_time] = [action_type, product_id, price]
 
     def get_weight(self, action_type_1, action_type_2):
         if action_type_1 == "remove from chart" or action_type_2 == "remove from chart": 
