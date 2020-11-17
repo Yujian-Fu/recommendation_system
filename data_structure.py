@@ -196,7 +196,7 @@ class record:
         assert(len(self.product_similarity_dict) == 0)
 
         for key1 in self.product_dict:
-            NeighborDict = self.product_dict[key1]
+            NeighborDict = self.product_dict[key1].relation_dict
 
             if key1 not in self.product_similarity_dict:
                 self.product_similarity_dict[key1] = {}
@@ -207,7 +207,7 @@ class record:
                     self.product_similarity_dict[key2] = {}
                 
                 if key2 not in self.product_similarity_dict[key1]:
-                    Similarity = SimilarityFunction(self.product_dict[key1], self.product_dict[key2], len(self.product_dict))
+                    Similarity = SimilarityFunction(self.product_dict[key1].relation_dict, self.product_dict[key2].relation_dict, len(self.product_dict))
                     self.product_similarity_dict[key1][key2] = Similarity
                     self.product_similarity_dict[key2][key1] = Similarity
 
