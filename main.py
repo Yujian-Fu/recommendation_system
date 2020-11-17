@@ -17,7 +17,7 @@ if __name__ == "__main__":
             print("Columns: ", reader[0])
             print("The total number of columns and rows ", len(reader), " ", len(reader[0]))
 
-            Record.add_record(reader)
+            Record.add_record(reader[1:])
 
             Record.build_similarity_matrix()
             Record.visualize()

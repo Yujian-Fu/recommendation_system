@@ -19,13 +19,10 @@ class record:
     def add_record(self, recorder):
         StartTime = time.time()
 
-        for idx, each_record in enumerate(recorder, 2):
+        for idx, each_record in enumerate(recorder):
             
             [action_time, action_type, product_id, category_id, category_code, brand, price, customer_id] = each_record[0:-1]
 
-            print(each_record, idx)
-            if (idx == 10):
-                exit(0)
             self.category_dict.add_category(category_id, category_code)
 
             if product_id not in self.product_dict:
@@ -38,7 +35,7 @@ class record:
                 self.customer_dict[customer_id].add_record(action_time, action_type, product_id, price)
             
             
-            #print('\r Loading the records:  ',idx," / ", len(recorder), " remaining time: ", round((time.time() - StartTime) * (len(recorder) - idx) / idx, 2), " s", end='')
+            print('\r Loading the records:  ',idx," / ", len(recorder), " remaining time: ", round((time.time() - StartTime) * (len(recorder) - idx) / idx, 2), " s", end='')
 
         print("  Load the dataset with time usage: ", round(time.time() - StartTime, 2), " s")
 
