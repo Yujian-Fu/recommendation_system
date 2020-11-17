@@ -2,6 +2,7 @@ from collections import OrderedDict
 import csv 
 import time
 from config import *
+import concurrent.futures
 
 
 def RaiseTypeError(S):
@@ -46,7 +47,7 @@ class record:
                 self.customer_dict[customer_id] = customer(customer_id)
 
             self.customer_dict[customer_id].add_record(action_time, action_type, product_id, price)
-            
+
             print('\rLoading the records:  ',idx+1," / ", len(recorder), " remaining time: ", round((time.time() - StartTime) * (len(recorder) - idx+1) / (idx+1), 2), " s", end='')
         print()
 
@@ -83,10 +84,14 @@ class record:
         ProductPairDict = {}
         ProductPriceDict = {}
 
-        for idx, cus_id in enumerate(self.customer_dict, 1):
-            print("\rBuilding Product Pairs: ", idx, " / ", len(self.customer_dict), end='')
-            ProductPairDict[cus_id], ProductPriceDict[cus_id] = self.get_product_pair(cus_id)
-        print()
+        with concurrent.futures.ProcessPoolExecutor() as Executer:
+            for cus_id, CustomerPairList, CustomerPriceDict in zip(list(self.customer_dict.keys()), self.get_product_pair(cus_id))
+                ProductPairDict[cus_id], ProductPriceDict[cus_id]
+    
+        #for idx, cus_id in enumerate(self.customer_dict, 1):
+            #print("\rBuilding Product Pairs: ", idx, " / ", len(self.customer_dict), end='')
+            #ProductPairDict[cus_id], ProductPriceDict[cus_id] = self.get_product_pair(cus_id)
+        #print()
 
         for UserID in ProductPriceDict:
             for ProductID in ProductPriceDict[UserID]:
@@ -100,7 +105,7 @@ class record:
         
         #print('\r Building the similarity matrix:  ',idx," / ", len(self.customer_dict), " remaining time: ", round((time.time() - StartTime) * (len(self.customer_dict) - idx) / idx, 2), " s", end='')
         print("Build the similarity matrix with time usage: ", round(time.time() - StartTime, 2), " s")
-        
+
 
     def compute_similarity(self):
         return 0

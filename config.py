@@ -14,4 +14,4 @@ REMOVE_W = -0.1
 MAX_W = 1.0
 
 FileFolderPath = "./dataset/"
-FileNameList = ["2019-Dec-sub-small.csv", "2019-Oct.csv"]
+FileNameList = ["2019-Dec-sub-small.csv", "2019-Dec-sub.csv"]
