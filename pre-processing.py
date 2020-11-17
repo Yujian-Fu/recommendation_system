@@ -114,9 +114,10 @@ for key in user_dict_add_chart:
 
 
 final_product_count_dict = {}
-for key in final_product_dict:
-    print(key)
-    a = Counter(final_product_dict[key])
+for each_product in final_product_dict:
+    print(each_product)
+    a = final_product_dict[each_product]
+    a = Counter(a)
     final_product_count_dict[key] = a
 
 end = time.time()
