@@ -48,11 +48,12 @@ class record:
             self.customer_dict[customer_id].add_record(action_time, action_type, product_id, price)
             
             print('\rLoading the records:  ',idx+1," / ", len(recorder), " remaining time: ", round((time.time() - StartTime) * (len(recorder) - idx+1) / (idx+1), 2), " s", end='')
-        
+        print()
+
         for cus_id in self.customer_dict:
             self.customer_dict[cus_id].check_interest()
         
-        print("\nLoad the dataset with time usage: ", round(time.time() - StartTime, 2), " s")
+        print("Load the dataset with time usage: ", round(time.time() - StartTime, 2), " s")
         each_customer_list = [len(self.customer_dict[user].record_dict) for user in self.customer_dict ]
         print("The total num of customer is: ", len(self.customer_dict), " The total number of product is: ", len(self.product_dict), " Each customer has record on ", 
              round(sum(each_customer_list) / len(each_customer_list), 2), "products on average")
@@ -178,6 +179,7 @@ class customer:
             product_interest = 0
             product_interest_price = 0
             each_record_interest = 0
+            DeleteKeyList = []
 
             for product_record in self.product_dict[product]:
                 assert(len(product_record) == 3)
@@ -204,7 +206,8 @@ class customer:
             if product_interest <= 0:
                 for product_record in self.product_dict[product]:
                     print(product_record)
-                del self.product_dict[product]
+                DeleteKeyList.append(product)
+                
             else:                    
                 product_interest_price /= product_interest
                 
@@ -212,7 +215,9 @@ class customer:
                     product_interest = MAX_W
             
                 self.product_dict[product] = [product_interest, product_interest_price]
-
+        
+        for DeleteKey in DeleteKeyList:
+            del self.product_dict[DeleteKey]
 
 
 class category_dict:
