@@ -9,9 +9,10 @@ import time
 start = time.time()
 if __name__ == "__main__":
 
-    Record = record()
+    
     for FileName in FileNameList:
         with open(FileFolderPath + FileName) as f:
+            Record = record()
             print("Read file from: ", FileFolderPath + FileName)
             reader = list(csv.reader(f))
             print("Columns: ", reader[0])
