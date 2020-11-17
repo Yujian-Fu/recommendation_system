@@ -27,6 +27,10 @@ class record:
         for idx, each_record in enumerate(recorder, 1):
             
             [action_time, action_type, product_id, category_id, category_code, brand, price, customer_id] = each_record[0:-1]
+            product_id = int(product_id)
+            category_id = int(category_id)
+            price = float(price)
+            customer_id = int(customer_id)
 
             self.category_dict.add_category(category_id, category_code)
 
@@ -173,7 +177,6 @@ class customer:
             each_record_interest = 0
 
             for product_record in self.product_dict[product]:
-                print(product_record)
                 assert(len(product_record) == 3)
                 
                 if product_record[1] == VIEW_S:
@@ -192,7 +195,6 @@ class customer:
                     RaiseTypeError(product_record[1])
                 
                 product_interest += each_record_interest
-                print(each_record_interest, product_record[2])
                 product_interest_price += each_record_interest * product_record[2]
 
             product_interest_price /= product_interest
