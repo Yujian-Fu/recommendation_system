@@ -67,7 +67,7 @@ class record:
         for index1 in range(len(CustomerKeyList)):
             ProductKey1 = CustomerKeyList[index1]
 
-            print(cus_id, ProductKey1, CustomerProductDict[ProductKey1], len(CustomerProductDict[ProductKey1][1]), type(CustomerProductDict[ProductKey1][1]))
+            print(cus_id, ProductKey1, CustomerProductDict[ProductKey1], len(CustomerProductDict[ProductKey1]), type(CustomerProductDict[ProductKey1]))
             price = CustomerProductDict[ProductKey1][1]
             CustomerPriceDict[ProductKey1] = price
 
