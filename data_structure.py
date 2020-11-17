@@ -87,8 +87,10 @@ class record:
             print("\rBuilding Product Pairs: ", idx, " / ", len(self.customer_dict))
             ProductPairDict[cus_id], ProductPriceDict[cus_id] = self.get_product_pair(cus_id)
 
-        for ProductID in ProductPriceDict:
-            self.product_dict[ProductID].price.append(ProductPriceDict[ProductID])
+        for UserID in ProductPriceDict:
+            ProductDict = ProductPriceDict[UserID]
+            for ProductID in ProductDict:    
+                self.product_dict[ProductID].price.append(ProductDict[ProductID])
             
         for ProductPairID in ProductPairDict:
             ProducPairList = ProductPairDict[ProductPairID]
