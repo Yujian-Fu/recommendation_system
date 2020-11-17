@@ -30,8 +30,8 @@ buy_weight = 5
 add_weight = 3
 
 
-with open(FileName) as f:
-    print("Read file from: ", FileName)
+with open(FileFolderPath + FileNameList[0]) as f:
+    print("Read file from: ", FileFolderPath + FileNameList[0])
     reader = list(csv.reader(f))
     print("The column name: ")
     print(reader[0])
@@ -118,6 +118,7 @@ for key in final_product_dict:
     final_product_count_dict[key] = Counter(final_product_dict[key])
 
 end = time.time()
+
 
 print ("Time for processing: ", round(end - start, 2))
 
