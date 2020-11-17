@@ -23,6 +23,8 @@ class record:
             
             [action_time, action_type, product_id, category_id, category_code, brand, price, customer_id] = each_record[0:-1]
 
+            print(each_record)
+            exit(0)
             self.category_dict.add_category(category_id, category_code)
 
             if product_id not in self.product_dict:
