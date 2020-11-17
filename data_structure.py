@@ -173,6 +173,8 @@ class customer:
             each_record_interest = 0
 
             for product_record in self.product_dict[product]:
+                print(product_record)
+                assert(len(product_record) == 3)
                 
                 if product_record[1] == VIEW_S:
                     each_record_interest = VIEW_W
