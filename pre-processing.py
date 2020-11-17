@@ -117,6 +117,7 @@ final_product_count_dict = {}
 for each_product in final_product_dict:
     print(each_product)
     a = final_product_dict[each_product]
+    print(a)
     a = Counter(a)
     final_product_count_dict[each_product] = a
 
