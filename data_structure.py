@@ -17,7 +17,12 @@ class record:
     
 
     def add_record(self, recorder):
-        for each_record in recorder:
+        StartTime = time.time()
+
+        for idx, each_record in enumerate(recorder):
+
+            print('\r Loading the records:  ',idx," / ", len(recorder), end='')
+
             [time, action_type, product_id, category_id, category_code, brand, price, customer_id] = each_record[0:-1]
 
             self.category_dict.add_category(category_id, category_code)
@@ -30,7 +35,7 @@ class record:
             else:
                 self.customer_dict[customer_id] = customer(customer_id)
                 self.customer_dict[customer_id].add_record(time, action_type, product_id, price)
-
+        print("  Load the dataset with time usage: ", round(time.time() - StartTime, 2))
 
     def build_similarity_matrix(self):
 
