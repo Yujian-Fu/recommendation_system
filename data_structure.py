@@ -20,17 +20,15 @@ class record:
         self.product_similarity = {}
         self.customer_similarity = {}
     
-
     def add_record(self, recorder):
         StartTime = time.time()
-        PreviousSession = ""
 
-        for idx, each_record in enumerate(recorder, 1):
-            RecordSession = each_record[-1]
-            if RecordSession == PreviousSession:
-                continue
-            PreviousSession = RecordSession
-            
+        for idx, each_record in enumerate(recorder):
+
+            if idx > 0:
+                if recorder[idx] == recorder[idx - 1]:
+                    continue
+
             [action_time, action_type, product_id, category_id, category_code, brand, price, customer_id] = each_record[0:-1]
             product_id = int(product_id)
             category_id = int(category_id)
@@ -49,7 +47,7 @@ class record:
 
             self.customer_dict[customer_id].add_record(action_time, action_type, product_id, price)
             
-            print('\rLoading the records:  ',idx," / ", len(recorder), " remaining time: ", round((time.time() - StartTime) * (len(recorder) - idx) / idx, 2), " s", end='')
+            print('\rLoading the records:  ',idx+1," / ", len(recorder), " remaining time: ", round((time.time() - StartTime) * (len(recorder) - idx+1) / idx+1, 2), " s", end='')
         
         for cus_id in self.customer_dict:
             self.customer_dict[cus_id].check_interest()
@@ -203,15 +201,17 @@ class customer:
                 product_interest_price += each_record_interest * product_record[2]
 
 
-            if product_interest == 0:
+            if product_interest <= 0:
                 for product_record in self.product_dict[product]:
                     print(product_record)
-            product_interest_price /= product_interest
+                del self.product_dict[product]
+            else:                    
+                product_interest_price /= product_interest
+                
+                if product_interest > MAX_W:
+                    product_interest = MAX_W
             
-            if product_interest > MAX_W:
-                product_interest = MAX_W
-        
-            self.product_dict[product] = [product_interest, product_interest_price]
+                self.product_dict[product] = [product_interest, product_interest_price]
 
 
 
