@@ -35,10 +35,10 @@ class record:
             else:
                 self.customer_dict[customer_id] = customer(customer_id)
                 self.customer_dict[customer_id].add_record(time, action_type, product_id, price)
-        print("  Load the dataset with time usage: ", round(time.time() - StartTime, 2))
+        print("  Load the dataset with time usage: ", round(time.time() - StartTime, 2), " s")
 
     def build_similarity_matrix(self):
-
+        StartTime = time.time()
         for idx, cus_id in enumerate(self.customer_dict):
             print('\r Building the similarity matrix:  ',idx," / ", len(self.customer_dict), end='')
 
@@ -66,6 +66,7 @@ class record:
                         pair_weight = self.customer_dict[cus_id].get_weight(action_type_1, action_type_2)
                         self.product_dict[product_id_1].add_product_pair(product_id_2, pair_weight)
 
+        print("   Build the similarity matrix with time usage: ", round(time.time() - StartTime, 2), " s")
 
     def compute_similarity(self):
         return 0
