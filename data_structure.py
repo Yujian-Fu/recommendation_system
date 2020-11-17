@@ -84,15 +84,14 @@ class record:
         ProductPriceDict = {}
 
         for idx, cus_id in enumerate(self.customer_dict, 1):
-            print("\rBuilding Product Pairs: ", idx, " / ", len(self.customer_dict), end="")
-            print()
+            print("\rBuilding Product Pairs: ", idx, " / ", len(self.customer_dict), end='')
             ProductPairDict[cus_id], ProductPriceDict[cus_id] = self.get_product_pair(cus_id)
+        print()
 
         for UserID in ProductPriceDict:
-            ProductDict = ProductPriceDict[UserID]
-            for ProductID in ProductDict:
-                self.product_dict[ProductID].price.append(ProductDict[ProductID])
-            
+            for ProductID in ProductPriceDict[UserID]:
+                self.product_dict[ProductID].price.append(ProductPriceDict[UserID][ProductID])
+
         for ProductPairID in ProductPairDict:
             ProducPairList = ProductPairDict[ProductPairID]
             for ProductPair in ProducPairList:
@@ -101,7 +100,7 @@ class record:
         
         #print('\r Building the similarity matrix:  ',idx," / ", len(self.customer_dict), " remaining time: ", round((time.time() - StartTime) * (len(self.customer_dict) - idx) / idx, 2), " s", end='')
         print("Build the similarity matrix with time usage: ", round(time.time() - StartTime, 2), " s")
-        exit(0)
+        
 
     def compute_similarity(self):
         return 0
