@@ -5,4 +5,4 @@ add_to_cart = 'cart'
 remove = 'remove_from_cart'
 purchase = 'purchase'
 FileFolderPath = "./dataset/"
-FileNameList = ["2019-Dec-sub-small.csv", "2019-Oct.csv"]
+FileNameList = ["2019-Dec-sub.csv", "2019-Oct.csv"]
