@@ -33,6 +33,8 @@ class record:
             if product_id not in self.product_dict:
                 self.product_dict[product_id] = product(product_id, category_id, brand)
 
+            self.product_dict[product_id].add_record_num(action_type)
+
             if customer_id not in self.customer_dict:
                 self.customer_dict[customer_id] = customer(customer_id)
 
@@ -51,57 +53,45 @@ class record:
 
 
     def get_product_pair(self, cus_id):
-        CustomerKeyList = self.customer_dict[cus_id].produc keys()
+        CustomerProductDict = self.customer_dict[cus_id].product_dict
+        CustomerKeyList = CustomerProductDict.keys()
         CustomerPairList = []
-        CustomerActionList = []
-        CustomerPriceList = []
-        for product1 in range(len(CustomerKeyList)):
-            EachItemList = []
-            CustomerActionList.append(self.customer_dict[])
-            for product2 in range(i+1, len(CustomerKeyList)):
+        CustomerPriceDict = []
+        for index1 in range(len(CustomerKeyList)):
+            ProductKey1 = CustomerKeyList[index1]
+            CustomerPriceDict[ProductKey1] = CustomerProductDict[ProductKey1][1]
 
+            for index2 in range(index1+1, len(CustomerKeyList)):
+                ProductKey2 = CustomerKeyList[index2]
+                Weight1 = CustomerProductDict[ProductKey1][0]
+                Weight2 = CustomerProductDict[ProductKey2][0]
+                CustomerPairList.append([ProductKey1, ProductKey2, Weight1 * Weight2])
 
-
-
-
+        return CustomerPairList, CustomerPriceDict
         
 
     def build_similarity_matrix(self):
         StartTime = time.time()
 
-        product_pair = {}
+        ProductPairDict = {}
+        ProductPriceDict = {}
 
         for idx, cus_id in enumerate(self.customer_dict, 1):
+            print("\rBuilding Product Pairs: ", idx, " / ", len(self.customer_dict))
+            ProductPairDict[cus_id], ProductPriceDict[cus_id] = self.get_product_pair(cus_id)
 
-
-
-            record_dict = self.customer_dict[cus_id].record_dict
-
-            for time_stamp_1 in record_dict:
-
-                product_id_1 = record_dict[time_stamp_1][1]
-                action_type_1 = record_dict[time_stamp_1][0]
-                price = record_dict[time_stamp_1][2]
-                assert(product_id_1 in self.product_dict)
-
-                if price not in self.product_dict[product_id_1].price:
-                    self.product_dict[product_id_1].price[price] = 1
-                else:
-                    self.product_dict[product_id_1].price[price] += 1
-
-                self.product_dict[product_id_1].add_record_num(action_type_1)
-
-                for time_stamp_2 in record_dict:
-                    product_id_2 = record_dict[time_stamp_2][1]
-
-                    if product_id_1 is not product_id_2:
-                        action_type_2 = record_dict[time_stamp_2][0]
-                        pair_weight = self.customer_dict[cus_id].get_weight(action_type_1, action_type_2)
-
-                        self.product_dict[product_id_1].add_product_pair(product_id_2, pair_weight)
-            print('\r Building the similarity matrix:  ',idx," / ", len(self.customer_dict), " remaining time: ", round((time.time() - StartTime) * (len(self.customer_dict) - idx) / idx, 2), " s", end='')
-
-        print("   Build the similarity matrix with time usage: ", round(time.time() - StartTime, 2), " s")
+        for ProductID in ProductPriceDict:
+            self.product_dict[ProductID].price.append(ProductPriceDict[ProductID])
+            
+        for ProductPairID in ProductPairDict:
+            ProducPairList = ProductPairDict[ProductPairID]
+            for ProductPair in ProducPairList:
+                assert(len(ProductPair) == 3)
+                self.product_dict[ProductPair[0]].add_product_pair(ProductPair[1], ProductPair[2])
+        
+        #print('\r Building the similarity matrix:  ',idx," / ", len(self.customer_dict), " remaining time: ", round((time.time() - StartTime) * (len(self.customer_dict) - idx) / idx, 2), " s", end='')
+        print("Build the similarity matrix with time usage: ", round(time.time() - StartTime, 2), " s")
+        exit(0)
 
     def compute_similarity(self):
         return 0
@@ -171,7 +161,7 @@ class customer:
 
     def add_record(self, action_time, action_type, product_id, price):
         self.record_num += 1
-        if product_id in self.record_dict:
+        if product_id in self.product_dict:
             self.product_dict[product_id].append([action_time, action_type, price])
         else:
             self.product_dict[product_id] = [[action_time, action_type, price]]
@@ -206,14 +196,8 @@ class customer:
             if product_interest > MAX_W:
                 product_interest = MAX_W
             
-            product_dict[product] = [product_interest, product_interest_price]
+            self.product_dict[product] = [product_interest, product_interest_price]
 
-
-    def get_weight(self, action_type_1, action_type_2):
-        if action_type_1 == "remove_from_cart" or action_type_2 == "remove_from_cart": 
-            return -0.5
-        else:
-            return 1.0
 
 
 class category_dict:
