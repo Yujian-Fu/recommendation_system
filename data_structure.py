@@ -177,13 +177,10 @@ class record:
         for key1 in dict_1:
             if key1 in dict_2:
                 ProdSum += dict_1[key1] * dict_2[key1]
-        
         if ProdSum == 0:
             return 0
-        
         for key1 in dict_1:
             Norm1 += dict_1[key1] ** 2
-
         for key2 in dict_2:
             Norm2 += dict_2[key2] ** 2
 
@@ -246,7 +243,8 @@ class record:
 
 
     def compute_item_similarity(self, SimilarityFunction):
-        assert(len(self.product_similarity_dict) == 0)
+        self.product_similarity_dict.clear()
+        #assert(len(self.product_similarity_dict) == 0)
         print("Computing the item based similarity for ", len(self.product_dict), "items")
         index1 = 0
 
@@ -334,6 +332,7 @@ class record:
         File.close()
 
     def write_record(self, folder_path, NameList):
+        print("Write record to: ", folder_path)
         if not os.path.exists(folder_path):
             os.makedirs(folder_path)
 
@@ -372,7 +371,8 @@ class record:
         PD = self.read_pickle_record(folder_path + ProductName)
     '''
 
-        
+    def test_prediction(self, recorder):
+        return 0
 
 
 class product:
@@ -396,7 +396,7 @@ class product:
             self.relation_dict[target_id] = weight_value
     
     def sort_value(self):
-        self.relation_dict = OrderedDict(sorted(self.relation_dict.items(), key = lambda t:t[1]))
+        self.relation_dict = OrderedDict(sorted(self.relation_dict.items(), key = lambda t:t[1])， reverse = True)
 
     def add_record_num(self, action_type):
         if action_type == VIEW_S:
