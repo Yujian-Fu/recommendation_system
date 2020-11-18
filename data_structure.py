@@ -396,7 +396,7 @@ class product:
             self.relation_dict[target_id] = weight_value
     
     def sort_value(self):
-        self.relation_dict = OrderedDict(sorted(self.relation_dict.items(), key = lambda t:t[1])， reverse = True)
+        self.relation_dict = OrderedDict(sorted(self.relation_dict.items(), key = lambda t:t[1], reverse = True))
 
     def add_record_num(self, action_type):
         if action_type == VIEW_S:
