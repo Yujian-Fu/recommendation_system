@@ -309,7 +309,7 @@ class record:
             topK = 0
             print("The similar product for product ", self.product_dict[product].id, self.product_dict[product].brand, self.product_dict[product].category)
             for relation_product in self.product_dict[product].relation_dict:
-                print(self.product_dict[relation_product].id,  self.product_dict[relation_product].brand, self.product_dict[relation_product].category)
+                print(self.product_dict[relation_product].id, self.product_dict[product].relation_dict[relation_product], self.product_dict[relation_product].brand, self.product_dict[relation_product].category)
                 topK += 1
                 if topK > VIS_K:
                     break
