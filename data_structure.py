@@ -252,6 +252,7 @@ class record:
 
         for key1 in self.product_dict:
             index1 += 1
+            index2 = 0
             print("\rComputing ", index1, " / ", len(self.product_dict), " " , " for similarity", end= "")
 
             NeighborDict = self.product_dict[key1].relation_dict
