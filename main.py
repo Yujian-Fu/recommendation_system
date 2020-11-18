@@ -9,7 +9,6 @@ import time
 start = time.time()
 if __name__ == "__main__":
 
-    
     for FileName in FileNameList:
         with open(FileFolderPath + FileName) as f:
             Record = record()

@@ -3,25 +3,27 @@ import csv
 import time
 from config import *
 import concurrent.futures
+import os
+import pickle
 
 
 def RaiseTypeError(S):
-    print("Error: action type not defined:", S)
+    print("Error: Type not defined:", S)
     exit(-1)
 
 
 class record:
     def __init__(self):
-        self.record_num = 0
+        self.category_dict = {}
         self.product_dict = {}
         self.customer_dict = {}
-        self.category_dict = category_dict()
-        self.min_time = ""
-        self.max_time = ""
         self.product_similarity_dict = {}
         self.customer_similarity_dict = {}
-        self.similarity_type = -1
+
+        self.record_num = 0
         self.use_parallel = 1 if USE_PARALLEL else 0
+        self.similarity_type = SIMILARITY_TYPE
+        self.item_threshold = ITEM_THRESHOLD
 
 
     def add_record(self, recorder):
@@ -39,7 +41,8 @@ class record:
             price = float(price)
             customer_id = int(customer_id)
 
-            self.category_dict.add_category(category_id, category_code)
+            if category_id not in self.category_dict:
+                self.category_dict[category_id] = category_code
 
             if product_id not in self.product_dict:
                 self.product_dict[product_id] = product(product_id, category_id, brand)
@@ -59,7 +62,7 @@ class record:
         
         print("Load the dataset with time usage: ", round(time.time() - StartTime, 2), " s")
         each_customer_list = [len(self.customer_dict[user].product_dict) for user in self.customer_dict ]
-        print("The total num of customer is: ", len(self.customer_dict), " The total number of product is: ", len(self.product_dict), " Each customer has record on ", 
+        print("Total num of customer: ", len(self.customer_dict), " Total number of product: ", len(self.product_dict), " Each customer has ", 
              round(sum(each_customer_list) / len(each_customer_list), 2), "products on average")
 
 
@@ -93,15 +96,19 @@ class record:
                 for cus_id, [CustomerPairList, CustomerPriceDict] in zip(cus_list, executer.map(self.get_product_pair, cus_list)):
                     ProductPairDict[cus_id], ProductPriceDict[cus_id] = CustomerPairList, CustomerPriceDict
         else:
-            for idx, cus_id in enumerate(self.customer_dict, 1):
-                print("\rBuilding Product Pairs: ", idx, " / ", len(self.customer_dict), end='')
+            for idx, cus_id in enumerate(self.customer_dict):
+                print("\rBuilding Product Pairs: ", idx, " / ", len(self.customer_dict), " remaining time: ", 
+                      round((time.time() - StartTime) * (len(self.customer_dict) - idx+1) / (idx+1), 2), " s", end='')
                 ProductPairDict[cus_id], ProductPriceDict[cus_id] = self.get_product_pair(cus_id)
             print()
 
+
+        print("Adding price records")
         for UserID in ProductPriceDict:
             for ProductID in ProductPriceDict[UserID]:
                 self.product_dict[ProductID].price.append(ProductPriceDict[UserID][ProductID])
 
+        print("Adding Product Pairs")
         for ProductPairID in ProductPairDict:
             ProducPairList = ProductPairDict[ProductPairID]
             for ProductPair in ProducPairList:
@@ -109,6 +116,9 @@ class record:
                 self.product_dict[ProductPair[0]].add_product_pair(ProductPair[1], ProductPair[2])
                 self.product_dict[ProductPair[1]].add_product_pair(ProductPair[0], ProductPair[2])
 
+        print("Sorting the product matrix")
+        for product in self.product_dict:
+            self.product_dict[product].sort_value()
         #print('\r Building the similarity matrix:  ',idx," / ", len(self.customer_dict), " remaining time: ", round((time.time() - StartTime) * (len(self.customer_dict) - idx) / idx, 2), " s", end='')
         print("Build the similarity matrix with time usage: ", round(time.time() - StartTime, 2), " s")
 
@@ -194,14 +204,22 @@ class record:
 
     def compute_item_similarity(self, SimilarityFunction):
         assert(len(self.product_similarity_dict) == 0)
+        print("Computing the item based similarity for ", len(self.product_dict), "items")
+        index1 = 0
+        index2 = 0
+
 
         for key1 in self.product_dict:
+            index1 += 1
+
             NeighborDict = self.product_dict[key1].relation_dict
 
             if key1 not in self.product_similarity_dict:
                 self.product_similarity_dict[key1] = {}
 
             for key2 in NeighborDict:
+                index2 += 1
+                print("\rComputing ", index1, " / ", len(self.product_dict), " ", index2, " / ", len(NeighborDict), " similarity", end= "")
 
                 if key2 not in self.product_similarity_dict:
                     self.product_similarity_dict[key2] = {}
@@ -210,10 +228,12 @@ class record:
                     Similarity = SimilarityFunction(self.product_dict[key1].relation_dict, self.product_dict[key2].relation_dict, len(self.product_dict))
                     self.product_similarity_dict[key1][key2] = Similarity
                     self.product_similarity_dict[key2][key1] = Similarity
-
+        print()
+    
     
     def compute_customer_similarity(self, SimilarityFunction):
         assert(len(self.customer_similarity_dict) == 0)
+        print("Computing the customer based similarity")
 
         CustomerKeyList = list(self.customer_dict.keys())
 
@@ -235,11 +255,9 @@ class record:
         for product in self.product_dict:
             count += 1
             topK = 0
-            self.product_dict[product].sort_value()
             print("The similar product for product ", self.product_dict[product].id, self.product_dict[product].brand, self.product_dict[product].category)
             for relation_product in self.product_dict[product].relation_dict:
-                
-                print(relation_product, self.product_dict[relation_product].id, self.product_dict[relation_product].brand, self.product_dict[relation_product].category)
+                print(self.product_dict[relation_product].id,  self.product_dict[relation_product].brand, self.product_dict[relation_product].category)
                 topK += 1
                 if topK > VIS_K:
                     break
@@ -248,6 +266,59 @@ class record:
 
     def prediction_item_based(self):
         return 0
+
+
+    def write_pickle_record(self, FileName, TargetData):
+        File = open(FileName, 'wb')
+        Str = pickle.dumps(TargetData)
+        File.write(Str)
+        File.close()
+
+    def write_txt_record(self, Filename):
+        File = open(Filename, "w")
+        File.write("Record_Num: " + str(self.record_num) + "\n")
+        File.write("Use_Parallel: " + str(self.use_parallel) + "\n")
+        File.write("Similarity_Type: " + self.similarity_type)
+        File.close()
+
+    def write_record(self, folder_path, NameList):
+        if not os.path.exists(folder_path):
+            os.makedirs(folder_path)
+
+        [CategoryName, ProductName, CustomerName, PSimName, CSimName, TxtName] = NameList
+        self.write_txt_record(TxtName)
+        self.write_pickle_record(folder_path + CategoryName, self.category_dict)
+        self.write_pickle_record(folder_path + ProductName, self.product_dict)
+        self.write_pickle_record(folder_path + CustomerName, self.customer_dict)
+        self.write_pickle_record(folder_path + PSimName, self.product_similarity_dict)
+        self.write_pickle_record(folder_path + CSimName, self.customer_similarity_dict)
+
+
+    def read_pickle_record(self, FileName):
+        with open (FileName, 'rb') as File:
+            return pickle.loads(File.read())
+
+    def read_txt_record(self, FileName):
+        with open(FileName, 'r') as file:
+            r = file.readlines()
+            self.record_num = int(r[0].split(" ")[-1].split("\n")[0])
+            self.use_parallel = bool(r[1].split(" ")[-1].split("\n")[0])
+            self.similarity_type = r[2].split(" ")[-1].split("\n")[0]
+
+    def read_record(self, folder_path, NameList):
+        [CategoryName, ProductName, CustomerName, PSimName, CSimName, TxtName] = NameList
+        self.category_dict = self.read_pickle_record(folder_path + CategoryName)
+        self.product_dict = self.read_pickle_record(folder_path + ProductName)
+        self.customer_dict = self.read_pickle_record(folder_path + CustomerName)
+        self.product_similarity_dict = self.read_pickle_record(folder_path + PSimName)
+        self.customer_similarity_dict = self.read_pickle_record(folder_path + CSimName)
+        self.read_txt_record(TxtName)
+
+
+    def update_record(self, folder_path, NameList):
+        [CategoryName, ProductName, CustomerName, PSimName, CSimName, TxtName] = NameList
+        PD = self.read_pickle_record(folder_path + ProductName)
+        
 
 
 class product:
@@ -347,14 +418,6 @@ class customer:
         for DeleteKey in DeleteKeyList:
             del self.product_dict[DeleteKey]
 
-
-class category_dict:
-    def __init__(self):
-        self.category_dict = {}
-    
-    def add_category(self, category_id, category_name):
-        if category_id not in self.category_dict:
-            self.category_dict[category_id] = category_name
 
 
 

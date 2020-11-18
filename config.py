@@ -12,7 +12,9 @@ ADD_W = 0.3
 PURCHASE_W = 0.5
 REMOVE_W = -0.1
 MAX_W = 1.0
+UPDATE_W = 0.5
 
+ITEM_THRESHOLD = 50
 USE_PARALLEL = False
 SIMILARITY_TYPE = "Cosine" # Choose from "Cosine", "Jaccard", "Pearson"
 
