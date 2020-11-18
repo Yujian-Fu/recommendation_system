@@ -21,6 +21,8 @@ class record:
         self._product_dict = {}
         self._customer_dict = {}
 
+        self.prediction_record_copy = {}
+
         self.product_similarity_dict = {}
         #self.customer_similarity_dict = {}
         self.customer_union_dict = {}
@@ -62,6 +64,7 @@ class record:
             print('\rLoading the records:  ',idx+1," / ", len(recorder), " remaining time: ", round((time.time() - StartTime) * (len(recorder) - idx+1) / (idx+1), 2), " s", end='')
         print()
 
+        
         for cus_id in self.customer_dict:
             self.customer_dict[cus_id].check_interest()
         
