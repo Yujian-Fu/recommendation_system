@@ -5,6 +5,9 @@ from config import *
 import concurrent.futures
 import os
 import pickle
+from sklearn.metrics.pairwise import cosine_similarity
+from scipy import sparse
+import numpy as np 
 
 
 def RaiseTypeError(S):
@@ -251,6 +254,10 @@ class record:
         print("Computing the item based similarity for ", len(self.product_dict), "items")
         index1 = 0
 
+        x_list = []
+        y_list = []
+        value_list = []
+
         for key1 in self.product_dict:
             index1 += 1
             index2 = 0
@@ -265,7 +272,12 @@ class record:
             for key2 in NeighborDict:
                 print("\rComputing ", index1, " / ", len(self.product_dict), " " , index2,  " for similarity", end= "")
                 index2 += 1
-                
+
+                x_list.append(key1)
+                y_list.append(key2)
+                value_list.append(NeighborDict[key2])
+
+                '''
                 if key2 not in self.product_similarity_dict:
                     self.product_similarity_dict[key2] = {}
                 
@@ -276,8 +288,20 @@ class record:
                 
                 if index2 > ITEM_THRESHOLD:
                     break
+                '''
+        print("The length of x_index: ", len(x_list))
+
+        similarity_time = time.time()
+        x_index = np.array(x_list)
+        y_index = np.array(y_list)
+        value_index = np.array(value_list)
+        SparseM = sparse.coo_matrix((value_index, (x_index, y_index)))
+        similaritys = cosine_similarity(SparseM)
+        print("The time for compute simialrity matrix: ", round(time.time() - similarity_time, 2))
+        exit(0)
+        
         print()
-    
+
     '''
     def compute_customer_similarity(self, SimilarityFunction):
         assert(len(self.customer_similarity_dict) == 0)

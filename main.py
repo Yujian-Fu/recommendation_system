@@ -5,7 +5,6 @@ from data_structure import *
 import time
 
 
-
 start = time.time()
 if __name__ == "__main__":
 
