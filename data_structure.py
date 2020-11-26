@@ -172,22 +172,33 @@ class record:
         self.product_dict = self.read_pickle_record(folder_path + ProductName)
         self.customer_dict = self.read_pickle_record(folder_path + CustomerName)
 
+    def get_sum_norm(self, target_dict):
+        sum_norm = 0
+        for key in target_dict:
+            sum_norm += target_dict[key]
+        return key
+
     def get_item_prediction(self, product_list, interest_list):
         assert(len(product_list) == TRAIN_THRESHOLD and len(interest_list) == TRAIN_THRESHOLD)
         product_id_dict = OrderedDict()
         
         for i in range(TRAIN_THRESHOLD):
             product_neighbor_list = list(self.product_dict[product_list[i]].relation_dict.keys())
-            for j in range(TEST_THRESHOLD):
+            neighbor_length = len(product_neighbor_list)
+            sum_norm = get_sum_norm(self.product_dict[product_list[i]].relation_dict)
+            for j in range(neighbor_length):
                 product_id = product_neighbor_list[j]
                 if product_id not in product_list:
                     # Should we add normalizatioin?
-                    product_interest = self.product_dict[product_list[i]].relation_dict[product_id] * interest_list[i]
+                    product_interest = self.product_dict[product_list[i]].relation_dict[product_id] * interest_list[i] / sum_norm
 
                     if product_id not in product_id_dict:
                         product_id_dict[product_id] = product_interest
                     else:
                         product_id_dict[product_id] += product_interest
+                
+                if j >= 2 * TEST_THRESHOLD:
+                    break
 
         product_id_dict = OrderedDict(sorted(product_id_dict.items(), key = lambda t:t[1], reverse = True))
         return list(product_id_dict.keys())[0:TEST_THRESHOLD]
@@ -212,8 +223,9 @@ class record:
                 for prediction in prediction_list:
                     if prediction in self.customer_dict[user_id].product_dict:
                         correct_item += 1
-                correct_accuracy += correct_item / TEST_THRESHOLD
-                tested_customer += 1
+                if (len(prediction_list) > 0):
+                    correct_accuracy += correct_item / len(prediction_list)
+                    tested_customer += 1
                 print("Updated test accuracy: ", round(correct_accuracy / tested_customer, 2), " Tested customers: ",  tested_customer)
             
                 if tested_customer > TEST_NUM:
