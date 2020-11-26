@@ -24,6 +24,7 @@ def preprocessing(filename):
 
 
 def testprocessing(filename):
+    print("Loading the saved structure from " + FileName.split('.')[0])
     Record = record()
     Record.read_record('./record/' + FileName.split('.')[0] + "/", ['Category.pkl', 'Product.pkl', 'Customer.pkl'])
     Record.test_accuracy()
