@@ -31,7 +31,7 @@ def testprocessing(filename):
 
 if __name__ == "__main__":
     start = time.time()
-    for FileName in FileNameList:
+    #for FileName in FileNameList:
         #preprocessing(FileName)
     
 
