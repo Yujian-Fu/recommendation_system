@@ -290,6 +290,7 @@ class record:
                     y_array = np.concatenate((y1_array, np.array(index_neighbor_list[sec_index])))
                     value_array = np.concatenate((value1_array, np.array(index_value_list[sec_index])))
                     sparseM = sparse.coo_matrix(value_array, (x_array, y_array))
+                    print(sparseM)
                     similarities = cosine_similarity(sparseM)
                     self.product_similarity_dict[index_list[i]][index_neighbor_list[i][j]] = similarities[0][1]
                     self.product_similarity_dict[index_neighbor_list[i][j]][index_list[i]] = similarities[0][1]
@@ -297,7 +298,7 @@ class record:
                 print("\rComputing ", i, " / ", len(index_list), " " , j, " / ", ITEM_THRESHOLD,  " for similarity", end= "")
                 if j >= ITEM_THRESHOLD:
                     break
-            
+
         exit(0)
         
 
