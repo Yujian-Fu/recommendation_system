@@ -198,7 +198,7 @@ class record:
         tested_customer = 0.0
 
         user_ids = self.customer_dict.keys()
-        for idx, user_id in enumerate(user_ids):
+        for user_id in enumerate(user_ids):
             if len(self.customer_dict[user_id].product_dict) > TRAIN_THRESHOLD + TEST_THRESHOLD:
                 correct_item = 0
                 product_list = []
@@ -214,10 +214,10 @@ class record:
                         correct_item += 1
                 correct_accuracy += correct_item / TEST_THRESHOLD
                 tested_customer += 1
-                print("\rUpdated test accuracy: ", correct_accuracy / tested_customer, end="")
+                print("Updated test accuracy: ", correct_accuracy / tested_customer, " Tested customers: ",  tested_customer)
             
-            if idx > TEST_NUM:
-                break
+                if tested_customer > TEST_NUM:
+                    break
 
 
 
