@@ -267,9 +267,10 @@ class record:
                     neighbor_similarity = similarity_list[neighbor_index]
                     neighbor_id = index_list[neighbor_index]
                     neighbor_product_dict = self.customer_dict[neighbor_id].product_dict
+                    sum_norm = self.get_sum_norm(neighbor_product_dict)
                     for product_id in neighbor_product_dict:
                         if product_id not in base_dict:
-                            weighted_similarity = neighbor_similarity * neighbor_product_dict[product_id]
+                            weighted_similarity = neighbor_similarity * neighbor_product_dict[product_id] / sum_norm
                             if product_id in prediction_dict:
                                 prediction_dict[product_id] = weighted_similarity
                             else:
