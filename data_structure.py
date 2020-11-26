@@ -289,7 +289,7 @@ class record:
                     x_array = np.concatenate((x1_array, np.array([1] * len(index_neighbor_list[sec_index]))))
                     y_array = np.concatenate((y1_array, np.array(index_neighbor_list[sec_index])))
                     value_array = np.concatenate((value1_array, np.array(index_value_list[sec_index])))
-                    print(x1_array, value1_array, value_array)
+                    print(type(x1_array), type(value1_array), type(value_array))
                     sparseM = sparse.coo_matrix(value_array, (x_array, y_array))
                     
                     similarities = cosine_similarity(sparseM)
