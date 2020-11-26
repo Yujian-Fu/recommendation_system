@@ -256,8 +256,23 @@ class record:
         print("Computing the item based similarity for ", len(self.product_dict), "items")
         index1 = 0
 
+        index_list = []
+        index_neighbor_list = []
+        index_value_list = []
 
-        
+        start_time = time.time()
+        for key_1 in self.product_dict:
+            index_list.append(key_1)
+            index_neighbor_list.append([])
+            index_value_list.append([])
+
+            for key_2 in self.product_dict[key_1].relation_dict:
+                index_neighbor_list[-1].append(key_2)
+                index_value_list[-1].append(self.product_dict[key_1].relation_dict)
+
+        print("Time for building relation list: ", round(time.time() - start_time))
+        exit(0)
+
         for key1 in self.product_dict:
             index1 += 1
             index2 = 0
@@ -272,7 +287,7 @@ class record:
             if key1 not in self.product_similarity_dict:
                 self.product_similarity_dict[key1] = {}
 
-            
+
             for key2 in NeighborDict:
                 x_list.append(index_similarity)
                 y_list.append(key2)
@@ -286,7 +301,6 @@ class record:
 
                 if key2 not in self.product_similarity_dict:
                     self.product_similarity_dict[key2] = {}
-
 
                 if key2 not in self.product_similarity_dict[key1]:
                     NeighborNeighborDict = self.product_dict[key2].relation_dict
