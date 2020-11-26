@@ -269,7 +269,7 @@ class record:
 
             for key_2 in self.product_dict[key_1].relation_dict:
                 index_neighbor_list[-1].append(key_2)
-                index_value_list[-1].append(self.product_dict[key_1].relation_dict)
+                index_value_list[-1].append(self.product_dict[key_1].relation_dict[key_2])
 
         print("Time for building relation list: ", round(time.time() - start_time))
         for i in range(len(index_list)):
@@ -289,8 +289,9 @@ class record:
                     x_array = np.concatenate((x1_array, np.array([1] * len(index_neighbor_list[sec_index]))))
                     y_array = np.concatenate((y1_array, np.array(index_neighbor_list[sec_index])))
                     value_array = np.concatenate((value1_array, np.array(index_value_list[sec_index])))
+                    print(sparseMvalue_array, (x_array, y_array))
                     sparseM = sparse.coo_matrix(value_array, (x_array, y_array))
-                    print(sparseM)
+                    
                     similarities = cosine_similarity(sparseM)
                     self.product_similarity_dict[index_list[i]][index_neighbor_list[i][j]] = similarities[0][1]
                     self.product_similarity_dict[index_neighbor_list[i][j]][index_list[i]] = similarities[0][1]
