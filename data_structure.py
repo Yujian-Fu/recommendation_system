@@ -177,7 +177,7 @@ class record:
         product_id_dict = OrderedDict()
         
         for i in range(TRAIN_THRESHOLD):
-            product_neighbor_list = self.product_dict[product_list[i]].relation_dict.keys()
+            product_neighbor_list = list(self.product_dict[product_list[i]].relation_dict.keys())
             for j in range(TEST_THRESHOLD):
                 product_id = product_neighbor_list[j]
                 if product_id not in product_list:
