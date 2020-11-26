@@ -5,10 +5,8 @@ from config import *
 import concurrent.futures
 import os
 import pickle
-from sklearn.metrics.pairwise import cosine_similarity
-from scipy import sparse
 import numpy as np 
-
+import heapq
 
 def RaiseTypeError(S):
     print("Error: Type not defined:", S)
@@ -203,17 +201,19 @@ class record:
         product_id_dict = OrderedDict(sorted(product_id_dict.items(), key = lambda t:t[1], reverse = True))
         return list(product_id_dict.keys())[0:TEST_THRESHOLD]
 
-    def test_accuracy(self):
+    def test_item_accuracy(self):
         # Item-based accuracy
         correct_accuracy = 0.0
         tested_customer = 0.0
 
-        user_ids = self.customer_dict.keys()
+        user_ids = list(self.customer_dict.keys())
         for user_id in user_ids:
             if len(self.customer_dict[user_id].product_dict) > TRAIN_THRESHOLD + TEST_THRESHOLD:
                 correct_item = 0
                 product_list = []
                 interest_list = []
+
+                # Use the sorted results for prediction?
                 product_ids = list(self.customer_dict[user_id].product_dict.keys())
                 for i in range(TRAIN_THRESHOLD):
                     product_list.append(product_ids[i])
@@ -230,6 +230,102 @@ class record:
             
                 if tested_customer > TEST_NUM:
                     break
+    
+
+    def test_customer_accuracy(self):
+        # Customer-based accuracy
+        correct_accuracy = 0.0
+        tested_customer = 0.0
+
+        user_ids = list(self.customer_dict.keys())
+        for user_id in user_ids:
+            if len(self.customer_dict[user_id].product_dict) > TRAIN_THRESHOLD + TEST_THRESHOLD:
+                correct_item = 0
+                index_list = []
+                similarity_list = []
+                base_dict = {}
+                # Use the sorted results for prediction?
+                product_ids = list(self.customer_dict[user_id].product_dict.keys())
+                for i in range(TRAIN_THRESHOLD):
+                    base_dict[product_ids[i]] = self.customer_dict[user_id].product_dict[product_ids[i]]
+                for compare_id in user_ids:
+                    # We only consider the ids with enough products
+                    if compare_id != user_id and len(self.customer_dict[compare_id].product_dict) > TRAIN_THRESHOLD + TEST_THRESHOLD:
+                        if SIMILARITY_TYPE == "Cosine":
+                            similarity = self.Cosine_similarity(base_dict, self.customer_dict[compare_id].product_dict)
+                        elif SIMILARITY_TYPE == "Jaccard":
+                            similarity = self.Jaccard_similarity(base_dict, self.customer_dict[compare_id].product_dict)
+                        else:
+                            print("Error similarity type")
+                            exit(0)
+                        index_list.append(compare_id)
+                        similarity_list.append(similarity)
+                
+                top_neighbors = heapq.nlargest(TOPK_NEIGHBORS, range(len(similarity_list)), similarity_list.__getitem__)
+                prediction_dict = OrderedDict()
+                for neighbor_index in top_neighbors:
+                    neighbor_similarity = similarity_list[neighbor_index]
+                    neighbor_id = index_list[neighbor_index]
+                    neighbor_product_dict = self.product_dict[neighbor_id].product_dict
+                    for product_id in neighbor_product_dict:
+                        if product_id not in base_dict:
+                            weighted_similarity = neighbor_similarity * neighbor_product_dict[product_id]
+                            if product_id in prediction_dict:
+                                prediction_dict[product_id] = weighted_similarity
+                            else:
+                                prediction_dict[product_id] += weighted_similarity
+                prediction_dict = OrderedDict(sorted(prediction_dict.items(), key = lambda t:t[1], reverse = True))
+                prediction_list = list(prediction_dict.keys())[0:TEST_THRESHOLD]
+                for prediction in prediction_list:
+                    if prediction in self.customer_dict[user_id].product_dict:
+                        correct_item += 1
+                if len(prediction_list) > 0:
+                    correct_accuracy += correct_item / len(prediction_list)
+                    tested_customer += 1
+                print("Update test accuracy: ", round(correct_accuracy / tested_customer, 4), " Tested customers: ",  tested_customer)
+
+                if tested_customer > TEST_NUM:
+                    break
+
+
+    def Cosine_similarity(self, dict_1, dict_2):
+        if len(dict_1) == 0 or len(dict_2) == 0:
+            return 0
+
+        ProdSum = 0
+        Norm1 = 0
+        Norm2 = 0
+        #[dict_1, dict_2] =  [dict_1, dict_2] if len(dict_1) < len(dict_2) else [dict_2, dict_1]
+        for key1 in dict_1:
+            if key1 in dict_2:
+                ProdSum += dict_1[key1] * dict_2[key1]
+
+        if ProdSum == 0:
+            return 0
+        for key1 in dict_1:
+            Norm1 += dict_1[key1] ** 2
+        for key2 in dict_2:
+            Norm2 += dict_2[key2] ** 2
+
+        return ProdSum / ((Norm1 * Norm2) ** 0.5)
+
+    def Jaccard_similarity(self, dict_1, dict_2):
+        if len(dict_1) == 0 or len(dict_2) == 0:
+            return 0
+
+        UnionLength = 0
+        #[dict_1, dict_2] =  [dict_1, dict_2] if len(dict_1) < len(dict_2) else [dict_2, dict_1]
+        
+        for key1 in dict_1:
+            if key1 in dict_2:
+                UnionLength += 1
+
+        return UnionLength / (len(dict_1) * len(dict_2))
+
+
+    # n is the number of dimension
+
+
 
 
 

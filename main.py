@@ -28,7 +28,7 @@ def testprocessing(filename):
     Record = record()
     Record.read_record('./record/' + FileName.split('.')[0] + "/", ['Category.pkl', 'Product.pkl', 'Customer.pkl'])
     print("Loaded")
-    Record.test_accuracy()
+    Record.test_customer_accuracy()
 
 
 if __name__ == "__main__":

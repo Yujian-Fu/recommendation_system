@@ -139,66 +139,6 @@ import numpy as np
                 self.customer_similarity_dict[key2][key1] = Similarity
     '''
 
-    def Cosine_similarity(self, dict_1, dict_2, n = 0):
-        if len(dict_1) == 0 or len(dict_2) == 0:
-            return 0
-
-        ProdSum = 0
-        Norm1 = 0
-        Norm2 = 0
-        [dict_1, dict_2] =  [dict_1, dict_2] if len(dict_1) < len(dict_2) else [dict_2, dict_1]
-        for key1 in dict_1:
-            if key1 in dict_2:
-                ProdSum += dict_1[key1] * dict_2[key1]
-        if ProdSum == 0:
-            return 0
-        for key1 in dict_1:
-            Norm1 += dict_1[key1] ** 2
-        for key2 in dict_2:
-            Norm2 += dict_2[key2] ** 2
-
-        return ProdSum / ((Norm1 * Norm2) ** 0.5)
-
-    def Jaccard_similarity(self, dict_1, dict_2, n = 0):
-        if len(dict_1) == 0 or len(dict_2) == 0:
-            return 0
-
-        UnionLength = 0
-        [dict_1, dict_2] =  [dict_1, dict_2] if len(dict_1) < len(dict_2) else [dict_2, dict_1]
-        
-        for key1 in dict_1:
-            if key1 in dict_2:
-                UnionLength += 1
-
-        return UnionLength / (len(dict_1) * len(dict_2))
-
-
-    # n is the number of dimension
-    def Pearson_similarity(self, dict_1, dict_2, n):
-        if len(dict_1) == 0 or len(dict_2) == 0:
-            return 0
-
-        Norm1 = 0
-        Sum1 = 0
-        Norm2 = 0
-        Sum2 = 0
-        Prod = 0
-
-        [dict_1, dict_2] =  [dict_1, dict_2] if len(dict_1) < len(dict_2) else [dict_2, dict_1]
-
-        for key1 in dict_1:
-            if key1 in dict_2:
-                Prod += dict_1[key1] * dict_2[key1]
-        
-        for key1 in dict_1:
-            Norm1 += dict_1[key1] ** 2
-            Sum1 += dict_1[key1]
-        
-        for key2 in dict_2:
-            Norm2 += dict_2[key2] ** 2
-            Sum2 += dict_2[key2]
-        
-        return (n * Prod - Sum1 * Sum2) / ((n * Norm1 - Sum1 **2) * (n * Norm2 - Sum2 **2)) ** 0.5
 
 
     def compute_similarity(self):
@@ -267,3 +207,29 @@ import numpy as np
             self.record_num = int(r[0].split(" ")[-1].split("\n")[0])
             self.use_parallel = bool(r[1].split(" ")[-1].split("\n")[0])
             self.similarity_type = r[2].split(" ")[-1].split("\n")[0]
+
+    def Pearson_similarity(self, dict_1, dict_2, n):
+        if len(dict_1) == 0 or len(dict_2) == 0:
+            return 0
+
+        Norm1 = 0
+        Sum1 = 0
+        Norm2 = 0
+        Sum2 = 0
+        Prod = 0
+
+        [dict_1, dict_2] =  [dict_1, dict_2] if len(dict_1) < len(dict_2) else [dict_2, dict_1]
+
+        for key1 in dict_1:
+            if key1 in dict_2:
+                Prod += dict_1[key1] * dict_2[key1]
+        
+        for key1 in dict_1:
+            Norm1 += dict_1[key1] ** 2
+            Sum1 += dict_1[key1]
+        
+        for key2 in dict_2:
+            Norm2 += dict_2[key2] ** 2
+            Sum2 += dict_2[key2]
+        
+        return (n * Prod - Sum1 * Sum2) / ((n * Norm1 - Sum1 **2) * (n * Norm2 - Sum2 **2)) ** 0.5
