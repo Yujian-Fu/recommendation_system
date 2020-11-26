@@ -198,7 +198,7 @@ class record:
         tested_customer = 0.0
 
         user_ids = self.customer_dict.keys()
-        for user_id in enumerate(user_ids):
+        for user_id in user_ids:
             if len(self.customer_dict[user_id].product_dict) > TRAIN_THRESHOLD + TEST_THRESHOLD:
                 correct_item = 0
                 product_list = []
