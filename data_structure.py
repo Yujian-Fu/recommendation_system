@@ -20,21 +20,10 @@ class record:
         self.category_dict = {}
         self.customer_dict = {}
         self.product_dict = {}
-        
-        self._product_dict = {}
-        self._customer_dict = {}
-
-        self.prediction_record_copy = {}
-
-        self.product_similarity_dict = {}
-        #self.customer_similarity_dict = {}
-        self.customer_union_dict = {}
 
         self.record_num = 0
         self.use_parallel = 1 if USE_PARALLEL else 0
         self.similarity_type = SIMILARITY_TYPE
-        self.item_threshold = ITEM_THRESHOLD
-
 
     def add_record(self, recorder):
         StartTime = time.time()
