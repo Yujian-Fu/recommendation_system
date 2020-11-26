@@ -185,7 +185,7 @@ class record:
         for i in range(TRAIN_THRESHOLD):
             product_neighbor_list = list(self.product_dict[product_list[i]].relation_dict.keys())
             neighbor_length = len(product_neighbor_list)
-            sum_norm = get_sum_norm(self.product_dict[product_list[i]].relation_dict)
+            sum_norm = self.get_sum_norm(self.product_dict[product_list[i]].relation_dict)
             for j in range(neighbor_length):
                 product_id = product_neighbor_list[j]
                 if product_id not in product_list:
