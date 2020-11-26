@@ -257,48 +257,67 @@ class record:
         x_list = []
         y_list = []
         value_list = []
-
+        
         for key1 in self.product_dict:
             index1 += 1
             index2 = 0
+            index_similarity = 0
+            index_record = []
             
-
+            
             NeighborDict = self.product_dict[key1].relation_dict
 
             if key1 not in self.product_similarity_dict:
                 self.product_similarity_dict[key1] = {}
 
-
+            
             for key2 in NeighborDict:
-                print("\rComputing ", index1, " / ", len(self.product_dict), " " , index2,  " for similarity", end= "")
-                index2 += 1
-
-                x_list.append(key1)
+                x_list.append(index_similarity)
                 y_list.append(key2)
                 value_list.append(NeighborDict[key2])
+            index_similarity += 1
+            index_record.append(key1)
 
-                '''
+            for key2 in NeighborDict:
+                print("\rAdding ", index1, " / ", len(self.product_dict), " " , index2,  " for similarity", end= "")
+                index2 += 1
+
                 if key2 not in self.product_similarity_dict:
                     self.product_similarity_dict[key2] = {}
+
+
+                if key2 not in self.product_similarity_dict[key1]:
+                    NeighborNeighborDict = self.product_dict[key2].relation_dict
+                    for key3 in NeighborNeighborDict:
+                        x_list.append(index_similarity)
+                        y_list.append(key3)
+                        value_list.append(NeighborNeighborDict[key3])
+                    index_similarity += 1
+                    index_record.append(key2)
                 
+                x_index = np.array(x_list)
+                y_index = np.array(y_list)
+                value_index = np.array(value_list)
+
+
+                if index2 > ITEM_THRESHOLD:
+                    break
+                
+                '''
                 if key2 not in self.product_similarity_dict[key1]:
                     Similarity = SimilarityFunction(self.product_dict[key1].relation_dict, self.product_dict[key2].relation_dict, len(self.product_dict))
                     self.product_similarity_dict[key1][key2] = Similarity
                     self.product_similarity_dict[key2][key1] = Similarity
-                
-                if index2 > ITEM_THRESHOLD:
-                    break
                 '''
-        print("The length of x_index: ", len(x_list))
+            
+            SparseM = sparse.coo_matrix((value_index, (x_index, y_index)))
+            similarities = cosine_similarity(SparseM)
 
-        similarity_time = time.time()
-        x_index = np.array(x_list)
-        y_index = np.array(y_list)
-        value_index = np.array(value_list)
-        SparseM = sparse.coo_matrix((value_index, (x_index, y_index)))
-        similaritys = cosine_similarity(SparseM)
-        print("The time for compute simialrity matrix: ", round(time.time() - similarity_time, 2))
-        exit(0)
+            for i in range(len(index_record)):
+                for j in range(i+1, len(index_record)):
+                    self.product_similarity_dict[index_record[i]][index_record[j]] = similarities[i][j]
+                    self.product_similarity_dict[index_record[j]][index_record[i]] = similarities[i][j]
+
         
         print()
 
