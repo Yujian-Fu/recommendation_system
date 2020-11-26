@@ -271,6 +271,30 @@ class record:
                 index_value_list[-1].append(self.product_dict[key_1].relation_dict)
 
         print("Time for building relation list: ", round(time.time() - start_time))
+        for i in range(len(index_list)):
+            if index_list[i] not in self.product_similarity_dict:
+                self.product_similarity_dict[index_list[i]] = {}
+            x1_array = np.array([0] * len(index_neighbor_list[i]))
+            y1_array = np.array(index_neighbor_list[i])
+            value1_array = np.array(index_value_list[i])
+            for j in range(len(index_neighbor_list[i])):
+                sec_index = index_neighbor_list[i][j]
+                if sec_index not in self.product_similarity_dict:
+                    self.product_similarity_dict[sec_index] = {}
+                
+                if sec_index not in self.product_similarity_dict[index_list[i]]:
+                    x_array = np.concatenate((x1_array, np.array([1] * len(index_neighbor_list[sec_index]))))
+                    y_array = np.concatenate((y1_array, np.array(index_neighbor_list[sec_index])))
+                    value_array = np.concatenate(value1_array, np.array(index_value_list[sec_index]))
+                    sparseM = sparse.coo_matrix(value_array, (x_array, y_array))
+                    similarities = cosine_similarity(sparseM)
+                    self.product_similarity_dict[index_list[i]][sec_index] = similarities[0][1]
+                    self.product_similarity_dict[sec_index][index_list[i]] = similarities[0][1]
+                
+                print("\rComputing ", i, " / ", len(index_list), " " , j, " / ", ITEM_THRESHOLD,  " for similarity", end= "")
+                if j >= ITEM_THRESHOLD:
+                    break
+            
         exit(0)
 
         for key1 in self.product_dict:
@@ -281,7 +305,7 @@ class record:
             x_list = []
             y_list = []
             value_list = []
-            
+
             NeighborDict = self.product_dict[key1].relation_dict
 
             if key1 not in self.product_similarity_dict:
