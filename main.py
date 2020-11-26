@@ -3,6 +3,8 @@ from config import *
 import csv
 from data_structure import *
 import time
+import psutil
+import os
 
 # The prediction accuracy in using product similarity / customer similarity
 # The time and memory consumption
@@ -33,13 +35,12 @@ def testprocessing(filename):
 
 if __name__ == "__main__":
     start = time.time()
-    #for FileName in FileNameList:
-        #preprocessing(FileName)
-    
-
     for FileName in FileNameList:
-        testprocessing(FileName)
+        preprocessing(FileName)
+        print(u'The memory usage of this procession: %.4f GB' % (psutil.Process(os.getpid()).memory_info().rss / 1024 / 1024 / 1024) )
 
+    #for FileName in FileNameList:
+        #testprocessing(FileName)
 
     end = time.time()
     print("The whole process consumes: ", round(end - start, 2), " s")
