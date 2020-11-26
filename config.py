@@ -21,7 +21,7 @@ SIMILARITY_TYPE = "Cosine" # Choose from "Cosine", "Jaccard", "Pearson"
 
 TRAIN_THRESHOLD = 10
 TEST_THRESHOLD = 10
-TEST_NUM = 50
+TEST_NUM = 500
 
 FileFolderPath = "./dataset/"
 FileNameList = ["2019-Dec-sub.csv"]
