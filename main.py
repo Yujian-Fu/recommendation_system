@@ -39,13 +39,13 @@ if __name__ == "__main__":
     for FileName in FileNameList:
         start = time.time()
         record_file = open(FileName.split('.')[0] + "_record.txt", 'a')
-        sys.stdout = record_file
-        sys.stderr = record_file
-        
+
         preprocessing(FileName)
         print(u'The memory usage of this procession: %.4f GB' % (psutil.Process(os.getpid()).memory_info().rss / 1024 / 1024 / 1024) )
+        record_file.write(u'The memory usage of this procession: %.4f GB' % (psutil.Process(os.getpid()).memory_info().rss / 1024 / 1024 / 1024))
         end = time.time()
         print("The whole process consumes: ", round(end - start, 2), " s")
+        record_file.write("The whole process consumes: ", round(end - start, 2), " s")
 
     #for FileName in FileNameList:
         #testprocessing(FileName)
