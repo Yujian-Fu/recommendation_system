@@ -172,6 +172,53 @@ class record:
         self.product_dict = self.read_pickle_record(folder_path + ProductName)
         self.customer_dict = self.read_pickle_record(folder_path + CustomerName)
 
+    def get_item_prediction(self, product_list, interest_list):
+        assert(len(product_list) == TRAIN_THRESHOLD and len(interest_list) == TRAIN_THRESHOLD)
+        product_id_dict = OrderedDict()
+        
+        for i in range(TRAIN_THRESHOLD):
+            product_neighbor_list = self.product_dict[product_list[i]].relation_dict.keys()
+            for j in range(TEST_THRESHOLD):
+                product_id = product_neighbor_list[j]
+                if product_id not in product_list:
+                    # Should we add normalizatioin?
+                    product_interest = self.product_dict[product_list[i]].relation_dict[product_id] * interest_list[i]
+
+                    if product_id not in product_id_dict:
+                        product_id_dict[product_id] = product_interest
+                    else:
+                        product_id_dict[product_id] += product_interest
+
+        product_id_dict = OrderedDict(sorted(product_id_dict.items(), key = lambda t:t[1], reverse = True))
+        return product_id_dict.keys()[0:TEST_THRESHOLD]
+
+    def test_accuracy(self):
+        # Item-based accuracy
+        correct_accuracy = 0.0
+        tested_customer = 0.0
+
+        user_ids = self.customer_dict.keys()
+        for idx, user_id in enumerate(user_ids):
+            if len(self.customer_dict[user_id].product_dict) > TRAIN_THRESHOLD + TEST_THRESHOLD:
+                correct_item = 0
+                product_list = []
+                interest_list = []
+                product_ids = self.customer_dict[user_id].product_dict.keys()
+                for i in range(TRAIN_THRESHOLD):
+                    product_list.append(product_ids[i])
+                    interest_list.append(self.customer_dict[user_id].product_dict[product_ids[i]])
+                prediction_list = self.get_item_prediction(product_list, interest_list)
+                assert(len(prediction_list) == TEST_THRESHOLD)
+                for prediction in prediction_list:
+                    if prediction in self.customer_dict[user_id].product_dict:
+                        correct_item += 1
+                correct_accuracy += correct_item / TEST_THRESHOLD
+                tested_customer += 1
+                print("\rUpdated test accuracy: ", correct_accuracy / tested_customer, end="")
+            
+            if idx > TEST_NUM:
+                break
+
 
 
 class product:

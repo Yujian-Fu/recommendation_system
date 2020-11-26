@@ -26,7 +26,7 @@ def preprocessing(filename):
 def testprocessing(filename):
     Record = record()
     Record.read_record('./record/' + FileName.split('.')[0] + "/", ['Category.pkl', 'Product.pkl', 'Customer.pkl'])
-    print(Record.category_dict)
+    Record.test_accuracy()
 
 
 if __name__ == "__main__":
