@@ -288,7 +288,7 @@ class record:
                 if index_neighbor_list[i][j] not in self.product_similarity_dict[index_list[i]]:
                     x_array = np.concatenate((x1_array, np.array([1] * len(index_neighbor_list[sec_index]))))
                     y_array = np.concatenate((y1_array, np.array(index_neighbor_list[sec_index])))
-                    value_array = np.concatenate(value1_array, np.array(index_value_list[sec_index]))
+                    value_array = np.concatenate((value1_array, np.array(index_value_list[sec_index])))
                     sparseM = sparse.coo_matrix(value_array, (x_array, y_array))
                     similarities = cosine_similarity(sparseM)
                     self.product_similarity_dict[index_list[i]][index_neighbor_list[i][j]] = similarities[0][1]
