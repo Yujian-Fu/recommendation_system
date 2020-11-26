@@ -19,7 +19,7 @@ ITEM_THRESHOLD = 50
 USE_PARALLEL = False
 SIMILARITY_TYPE = "Cosine" # Choose from "Cosine", "Jaccard", "Pearson"
 
-TRAIN_THRESHOLD = 5
+TRAIN_THRESHOLD = 10
 TEST_THRESHOLD = 5
 TEST_NUM = 50
 
