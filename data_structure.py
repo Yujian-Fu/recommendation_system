@@ -176,7 +176,7 @@ class record:
         sum_norm = 0
         for key in target_dict:
             sum_norm += target_dict[key]
-        return key
+        return sum_norm
 
     def get_item_prediction(self, product_list, interest_list):
         assert(len(product_list) == TRAIN_THRESHOLD and len(interest_list) == TRAIN_THRESHOLD)
