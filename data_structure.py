@@ -214,7 +214,7 @@ class record:
                         correct_item += 1
                 correct_accuracy += correct_item / TEST_THRESHOLD
                 tested_customer += 1
-                print("Updated test accuracy: ", correct_accuracy / tested_customer, " Tested customers: ",  tested_customer)
+                print("Updated test accuracy: ", round(correct_accuracy / tested_customer, 2), " Tested customers: ",  tested_customer)
             
                 if tested_customer > TEST_NUM:
                     break
