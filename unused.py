@@ -215,3 +215,41 @@ import numpy as np
 
         print("Time for computing the similarity: ", round(time.time() - time_start, 2))
         #self.compute_customer_similarity(SimilarityFunction)
+
+
+        '''
+        for cus_id in self.customer_dict:
+            for product_id in self.customer_dict[cus_id].product_dict:
+                if product_id not in self._product_dict:
+                    self._product_dict[product_id] = {}
+                if cus_id not in self._product_dict[product_id]:
+                    self._product_dict[product_id][cus_id] = 0
+                self._product_dict[product_id][cus_id] += self.customer_dict[cus_id].product_dict[product_id]
+        
+        
+        for product_id in self._product_dict:
+            ProductCustomerDict = self._product_dict[product_id]
+            cust_id_list = list(ProductCustomerDict.keys())
+            for index1 in range(len(cust_id_list)):
+                UserID1 = cust_id_list[index1]
+                if UserID1 not in self._customer_dict:
+                    self._customer_dict[UserID1] = {}
+
+                for index2 in range(index1 + 1, len(cust_id_list)):
+                    UserID2 = cust_id_list[index2]
+
+                    if UserID2 not in self._customer_dict:
+                        self._customer_dict[UserID2] = {}
+
+                    weight = self._product_dict[product_id][UserID1] * self._product_dict[product_id][UserID2]
+
+                    if UserID2 not in self._customer_dict[UserID1]:
+                        self._customer_dict[UserID1][UserID2] = weight
+                    else:
+                        self._customer_dict[UserID1][UserID2] += weight
+                    
+                    if UserID1 not in self._customer_dict[UserID2]:
+                        self._customer_dict[UserID2][UserID1] = weight
+                    else:
+                        self._customer_dict[UserID2][UserID1] += weight
+        '''

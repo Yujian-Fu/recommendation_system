@@ -17,10 +17,10 @@ if __name__ == "__main__":
             print("The total number of columns and rows ", len(reader), " ", len(reader[0]))
 
             Record.add_record(reader[1:])
-
             Record.build_similarity_matrix()
             Record.visualize()
-            Record.write_record('./record/' + FileName.split('.')[0], ['Category.pkl', 'Product.pkl', 'Customer.pkl', 'Record.txt'])
+            Record.write_record('./record/' + FileName.split('.')[0] + "/", ['Category.pkl', 'Product.pkl', 'Customer.pkl', 'Record.txt'])
+
     
     end = time.time()
     print("The whole process consumes: ", round(end - start, 2), " s")

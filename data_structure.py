@@ -131,43 +131,6 @@ class record:
         for product in self.product_dict:
             self.product_dict[product].sort_value()
         #print('\r Building the similarity matrix:  ',idx," / ", len(self.customer_dict), " remaining time: ", round((time.time() - StartTime) * (len(self.customer_dict) - idx) / idx, 2), " s", end='')
-        
-        '''
-        for cus_id in self.customer_dict:
-            for product_id in self.customer_dict[cus_id].product_dict:
-                if product_id not in self._product_dict:
-                    self._product_dict[product_id] = {}
-                if cus_id not in self._product_dict[product_id]:
-                    self._product_dict[product_id][cus_id] = 0
-                self._product_dict[product_id][cus_id] += self.customer_dict[cus_id].product_dict[product_id]
-        
-        
-        for product_id in self._product_dict:
-            ProductCustomerDict = self._product_dict[product_id]
-            cust_id_list = list(ProductCustomerDict.keys())
-            for index1 in range(len(cust_id_list)):
-                UserID1 = cust_id_list[index1]
-                if UserID1 not in self._customer_dict:
-                    self._customer_dict[UserID1] = {}
-
-                for index2 in range(index1 + 1, len(cust_id_list)):
-                    UserID2 = cust_id_list[index2]
-
-                    if UserID2 not in self._customer_dict:
-                        self._customer_dict[UserID2] = {}
-
-                    weight = self._product_dict[product_id][UserID1] * self._product_dict[product_id][UserID2]
-
-                    if UserID2 not in self._customer_dict[UserID1]:
-                        self._customer_dict[UserID1][UserID2] = weight
-                    else:
-                        self._customer_dict[UserID1][UserID2] += weight
-                    
-                    if UserID1 not in self._customer_dict[UserID2]:
-                        self._customer_dict[UserID2][UserID1] = weight
-                    else:
-                        self._customer_dict[UserID2][UserID1] += weight
-        '''
                     
         print("Build the similarity matrix with time usage: ", round(time.time() - StartTime, 2), " s")
 
@@ -179,7 +142,7 @@ class record:
             topK = 0
             print("The similar product for product ", self.product_dict[product].id, self.product_dict[product].brand, self.product_dict[product].category)
             for relation_product in self.product_dict[product].relation_dict:
-                print(self.product_dict[relation_product].id, self.product_dict[product].relation_dict[relation_product], self.product_dict[relation_product].brand, self.product_dict[relation_product].category)
+                print(self.product_dict[relation_product].id, round(self.product_dict[product].relation_dict[relation_product], 2), self.product_dict[relation_product].brand, self.product_dict[relation_product].category)
                 topK += 1
                 if topK > VIS_K:
                     break
