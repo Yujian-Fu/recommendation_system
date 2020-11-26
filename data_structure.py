@@ -266,7 +266,7 @@ class record:
                 for neighbor_index in top_neighbors:
                     neighbor_similarity = similarity_list[neighbor_index]
                     neighbor_id = index_list[neighbor_index]
-                    neighbor_product_dict = self.product_dict[neighbor_id].product_dict
+                    neighbor_product_dict = self.customer_dict[neighbor_id].product_dict
                     for product_id in neighbor_product_dict:
                         if product_id not in base_dict:
                             weighted_similarity = neighbor_similarity * neighbor_product_dict[product_id]
