@@ -271,7 +271,7 @@ class record:
                     for product_id in neighbor_product_dict:
                         if product_id not in base_dict:
                             weighted_similarity = neighbor_similarity * neighbor_product_dict[product_id] / sum_norm
-                            if product_id in prediction_dict:
+                            if product_id not in prediction_dict:
                                 prediction_dict[product_id] = weighted_similarity
                             else:
                                 prediction_dict[product_id] += weighted_similarity
