@@ -256,16 +256,16 @@ class record:
         print("Computing the item based similarity for ", len(self.product_dict), "items")
         index1 = 0
 
-        x_list = []
-        y_list = []
-        value_list = []
+
         
         for key1 in self.product_dict:
             index1 += 1
             index2 = 0
             index_similarity = 0
             index_record = []
-            
+            x_list = []
+            y_list = []
+            value_list = []
             
             NeighborDict = self.product_dict[key1].relation_dict
 
