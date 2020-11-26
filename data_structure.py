@@ -244,7 +244,9 @@ class record:
         else:
             RaiseTypeError(SIMILARITY_TYPE)
         
+        time_start = time.time()
         self.compute_item_similarity(SimilarityFunction)
+        print("Time for computing the similarity: ", round(time.time() - time_start, 2))
         #self.compute_customer_similarity(SimilarityFunction)
 
 
