@@ -226,7 +226,7 @@ class record:
                 if (len(prediction_list) > 0):
                     correct_accuracy += correct_item / len(prediction_list)
                     tested_customer += 1
-                print("Updated test accuracy: ", round(correct_accuracy / tested_customer, 2), " Tested customers: ",  tested_customer)
+                print("Updated test accuracy: ", round(correct_accuracy / tested_customer, 4), " Tested customers: ",  tested_customer)
             
                 if tested_customer > TEST_NUM:
                     break
