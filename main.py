@@ -20,15 +20,7 @@ if __name__ == "__main__":
 
             Record.build_similarity_matrix()
             Record.visualize()
-            Record.compute_similarity()
             Record.write_record('./record/' + FileName.split('.')[0], ['Category.pkl', 'Product.pkl', 'Customer.pkl', 'PSim.pkl', 'CSim.pkl', 'Record.txt'])
+    
     end = time.time()
     print("The whole process consumes: ", round(end - start, 2), " s")
-
-
-
-
-
-
-
-
