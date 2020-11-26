@@ -167,7 +167,7 @@ class record:
             return pickle.loads(File.read())
 
     def read_record(self, folder_path, NameList):
-        [CategoryName, ProductName, CustomerName, TxtName] = NameList
+        [CategoryName, ProductName, CustomerName] = NameList
         self.category_dict = self.read_pickle_record(folder_path + CategoryName)
         self.product_dict = self.read_pickle_record(folder_path + ProductName)
         self.customer_dict = self.read_pickle_record(folder_path + CustomerName)
