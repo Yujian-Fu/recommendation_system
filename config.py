@@ -18,6 +18,9 @@ ITEM_THRESHOLD = 50
 USE_PARALLEL = False
 SIMILARITY_TYPE = "Cosine" # Choose from "Cosine", "Jaccard", "Pearson"
 
+TRAIN_THRESHOLD = 30
+TEST_THRESHOLD = 20
+
 
 FileFolderPath = "./dataset/"
 FileNameList = ["2019-Dec-sub-small.csv", "2019-Dec-sub.csv"]

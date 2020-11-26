@@ -131,15 +131,15 @@ class record:
             topK = 0
             print("The similar product for product ", self.product_dict[product].id, self.product_dict[product].brand, self.product_dict[product].category)
             for relation_product in self.product_dict[product].relation_dict:
-                print(self.product_dict[relation_product].id, round(self.product_dict[product].relation_dict[relation_product], 2), self.product_dict[relation_product].brand, self.product_dict[relation_product].category)
+                if self.product_dict[relation_product].category in self.category_dict:
+                    print(self.product_dict[relation_product].id, round(self.product_dict[product].relation_dict[relation_product], 2), self.product_dict[relation_product].brand, self.category_dict[self.product_dict[relation_product].category])
+                else:
+                    print(self.product_dict[relation_product].id, round(self.product_dict[product].relation_dict[relation_product], 2), self.product_dict[relation_product].brand)
                 topK += 1
                 if topK > VIS_K:
                     break
             if count > VIS_NUM:
                 break
-
-    def prediction_item_based(self):
-        return 0
 
 
     def write_pickle_record(self, FileName, TargetData):
@@ -148,20 +148,13 @@ class record:
         File.write(Str)
         File.close()
 
-    def write_txt_record(self, Filename):
-        File = open(Filename, "w")
-        File.write("Record_Num: " + str(self.record_num) + "\n")
-        File.write("Use_Parallel: " + str(self.use_parallel) + "\n")
-        #File.write("Similarity_Type: " + self.similarity_type)
-        File.close()
 
     def write_record(self, folder_path, NameList):
         print("Write record to: ", folder_path)
         if not os.path.exists(folder_path):
             os.makedirs(folder_path)
 
-        [CategoryName, ProductName, CustomerName, TxtName] = NameList
-        self.write_txt_record(TxtName)
+        [CategoryName, ProductName, CustomerName] = NameList
         self.write_pickle_record(folder_path + CategoryName, self.category_dict)
         self.write_pickle_record(folder_path + ProductName, self.product_dict)
         self.write_pickle_record(folder_path + CustomerName, self.customer_dict)
@@ -173,25 +166,12 @@ class record:
         with open (FileName, 'rb') as File:
             return pickle.loads(File.read())
 
-    def read_txt_record(self, FileName):
-        with open(FileName, 'r') as file:
-            r = file.readlines()
-            self.record_num = int(r[0].split(" ")[-1].split("\n")[0])
-            self.use_parallel = bool(r[1].split(" ")[-1].split("\n")[0])
-            self.similarity_type = r[2].split(" ")[-1].split("\n")[0]
-
     def read_record(self, folder_path, NameList):
         [CategoryName, ProductName, CustomerName, TxtName] = NameList
         self.category_dict = self.read_pickle_record(folder_path + CategoryName)
         self.product_dict = self.read_pickle_record(folder_path + ProductName)
         self.customer_dict = self.read_pickle_record(folder_path + CustomerName)
-        #self.product_similarity_dict = self.read_pickle_record(folder_path + PSimName)
-        #self.customer_similarity_dict = self.read_pickle_record(folder_path + CSimName)
-        self.read_txt_record(TxtName)
 
-
-    def test_prediction(self, recorder):
-        return 0
 
 
 class product:

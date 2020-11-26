@@ -253,3 +253,17 @@ import numpy as np
                     else:
                         self._customer_dict[UserID2][UserID1] += weight
         '''
+    def write_txt_record(self, Filename):
+        File = open(Filename, "w")
+        File.write("Record_Num: " + str(self.record_num) + "\n")
+        File.write("Use_Parallel: " + str(self.use_parallel) + "\n")
+        #File.write("Similarity_Type: " + self.similarity_type)
+        File.close()
+
+
+    def read_txt_record(self, FileName):
+        with open(FileName, 'r') as file:
+            r = file.readlines()
+            self.record_num = int(r[0].split(" ")[-1].split("\n")[0])
+            self.use_parallel = bool(r[1].split(" ")[-1].split("\n")[0])
+            self.similarity_type = r[2].split(" ")[-1].split("\n")[0]
