@@ -208,7 +208,7 @@ class record:
                     product_list.append(product_ids[i])
                     interest_list.append(self.customer_dict[user_id].product_dict[product_ids[i]])
                 prediction_list = self.get_item_prediction(product_list, interest_list)
-                assert(len(prediction_list) == TEST_THRESHOLD)
+                assert(len(prediction_list) <= TEST_THRESHOLD)
                 for prediction in prediction_list:
                     if prediction in self.customer_dict[user_id].product_dict:
                         correct_item += 1

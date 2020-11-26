@@ -20,7 +20,7 @@ USE_PARALLEL = False
 SIMILARITY_TYPE = "Cosine" # Choose from "Cosine", "Jaccard", "Pearson"
 
 TRAIN_THRESHOLD = 10
-TEST_THRESHOLD = 5
+TEST_THRESHOLD = 10
 TEST_NUM = 50
 
 FileFolderPath = "./dataset/"
