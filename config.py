@@ -4,8 +4,8 @@ REMOVE_S = 'remove_from_cart'
 PURCHASE_S = 'purchase'
 
 
-VIS_NUM = 10
-VIS_K = 10
+VIS_NUM = 5
+VIS_K = 5
 
 VIEW_W = 0.2
 ADD_W = 0.3
