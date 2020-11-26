@@ -190,7 +190,7 @@ class record:
                         product_id_dict[product_id] += product_interest
 
         product_id_dict = OrderedDict(sorted(product_id_dict.items(), key = lambda t:t[1], reverse = True))
-        return product_id_dict.keys()[0:TEST_THRESHOLD]
+        return list(product_id_dict.keys())[0:TEST_THRESHOLD]
 
     def test_accuracy(self):
         # Item-based accuracy
@@ -203,7 +203,7 @@ class record:
                 correct_item = 0
                 product_list = []
                 interest_list = []
-                product_ids = self.customer_dict[user_id].product_dict.keys()
+                product_ids = list(self.customer_dict[user_id].product_dict.keys())
                 for i in range(TRAIN_THRESHOLD):
                     product_list.append(product_ids[i])
                     interest_list.append(self.customer_dict[user_id].product_dict[product_ids[i]])

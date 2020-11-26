@@ -27,6 +27,7 @@ def testprocessing(filename):
     print("Loading the saved structure from " + FileName.split('.')[0])
     Record = record()
     Record.read_record('./record/' + FileName.split('.')[0] + "/", ['Category.pkl', 'Product.pkl', 'Customer.pkl'])
+    print("Loaded")
     Record.test_accuracy()
 
 
