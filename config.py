@@ -27,4 +27,4 @@ TOPK_NEIGHBORS = 10
 
 USE_PARALLEL = False
 FileFolderPath = "./dataset/"
-FileNameList = ["2019-Jan.csv"]
+FileNameList = ["2020-Jan.csv"]
