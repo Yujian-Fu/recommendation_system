@@ -36,7 +36,7 @@ def testprocessing(filename):
 
 if __name__ == "__main__":
     
-    '''
+    
     for FileName in FileNameList:
         start = time.time()
         record_file = open(FileName.split('.')[0] + "_record.txt", 'a')
@@ -51,5 +51,6 @@ if __name__ == "__main__":
 
     for FileName in FileNameList:
         testprocessing(FileName)
+    '''
 
 
