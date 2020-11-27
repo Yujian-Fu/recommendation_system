@@ -31,11 +31,12 @@ def testprocessing(filename):
     Record = record()
     Record.read_record('./record/' + FileName.split('.')[0] + "/", ['Category.pkl', 'Product.pkl', 'Customer.pkl'])
     print("Loaded")
-    Record.test_customer_accuracy()
+    Record.test_item_accuracy()
 
 
 if __name__ == "__main__":
     
+    '''
     for FileName in FileNameList:
         start = time.time()
         record_file = open(FileName.split('.')[0] + "_record.txt", 'a')
@@ -46,8 +47,9 @@ if __name__ == "__main__":
         end = time.time()
         print("The whole process consumes: ", round(end - start, 2), " s")
         record_file.write("The whole process consumes: " + str(round(end - start, 2)) + " s")
+    '''
 
-    #for FileName in FileNameList:
-        #testprocessing(FileName)
+    for FileName in FileNameList:
+        testprocessing(FileName)
 
 
