@@ -17,7 +17,7 @@ UPDATE_W = 0.5
 #Item accuracy parameters:
 TRAIN_THRESHOLD = 20
 TEST_THRESHOLD = 10
-TEST_NUM = 5000
+TEST_NUM = 1000
 
 # Customer accuracy parameters:
 
@@ -27,4 +27,4 @@ TOPK_NEIGHBORS = 10
 
 USE_PARALLEL = False
 FileFolderPath = "./dataset/"
-FileNameList = ["2019-Dec-sub.csv"]
+FileNameList = ["2019-Jan.csv"]
