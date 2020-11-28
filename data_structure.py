@@ -15,14 +15,18 @@ def RaiseTypeError(S):
 
 class record:
     def __init__(self):
+        # The dictory contains the category name and ID
         self.category_dict = {}
+        # The dict with customer-product interest information
         self.customer_dict = {}
+        # The dict with product-product similarity information
         self.product_dict = {}
 
         self.record_num = 0
         self.use_parallel = 1 if USE_PARALLEL else 0
         self.similarity_type = SIMILARITY_TYPE
 
+    # Add records to the data structure
     def add_record(self, recorder):
         StartTime = time.time()
 
@@ -54,7 +58,6 @@ class record:
             print('\rLoading the records:  ',idx+1," / ", len(recorder), " remaining time: ", round((time.time() - StartTime) * (len(recorder) - idx+1) / (idx+1), 2), " s", end='')
         print()
 
-        
         for cus_id in self.customer_dict:
             self.customer_dict[cus_id].check_interest()
         
@@ -63,7 +66,7 @@ class record:
         print("Total num of customer: ", len(self.customer_dict), " Total number of product: ", len(self.product_dict), " Each customer has ", 
              round(sum(each_customer_list) / len(each_customer_list), 2), "products on average")
 
-
+    # Get the product simialrity pair from one customer record
     def get_product_pair(self, cus_id):
         CustomerProductDict = self.customer_dict[cus_id].product_dict
         CustomerKeyList = list(CustomerProductDict.keys())
@@ -82,6 +85,7 @@ class record:
         return [CustomerPairList, CustomerPriceDict]
 
 
+    # Construct the similarity matrix
     def build_similarity_matrix(self):
         StartTime = time.time()
 
@@ -122,6 +126,7 @@ class record:
         print("Build the similarity matrix with time usage: ", round(time.time() - StartTime, 2), " s")
 
 
+    # Print examples of recommend products
     def visualize(self):
         count = 0
         for product in self.product_dict:
@@ -139,7 +144,7 @@ class record:
             if count > VIS_NUM:
                 break
 
-
+    # Write the file to disk
     def write_pickle_record(self, FileName, TargetData):
         File = open(FileName, 'wb')
         Str = pickle.dumps(TargetData)
@@ -176,6 +181,7 @@ class record:
             sum_norm += target_dict[key]
         return sum_norm
 
+    # Generate the item-based prediction result 
     def get_item_prediction(self, product_list, interest_list):
         assert(len(product_list) == TRAIN_THRESHOLD and len(interest_list) == TRAIN_THRESHOLD)
         product_id_dict = OrderedDict()
@@ -201,6 +207,7 @@ class record:
         product_id_dict = OrderedDict(sorted(product_id_dict.items(), key = lambda t:t[1], reverse = True))
         return list(product_id_dict.keys())[0:TEST_THRESHOLD]
 
+    # Generate the customer-based prediction result
     def test_item_accuracy(self):
         # Item-based accuracy
         correct_accuracy = 0.0
